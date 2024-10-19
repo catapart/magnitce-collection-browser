@@ -1,0 +1,27 @@
+<nav part="navigation">
+    <slot name="navigation-header">
+        <header part="navigation-header">
+            <slot name="navigation-header-content"></slot>
+        </header>
+    </slot>
+    <selectable-items part="categories"><slot name="category"></slot></selectable-items>
+</nav>
+<div part="gallery">
+    <slot name="header">
+        <header part="header">
+            <slot name="header-content">
+            </slot>
+            <slot name="add-button">
+                <button part="add-button">
+                    <slot name="add-button-content">
+                        <span part="add-button-icon">+</span>
+                        <span part="add-button-label">Add Item</span>
+                    </slot>
+                </button>
+            </slot>
+        </header>
+    </slot>
+    <div part="items">
+        <slot></slot>
+    </div>
+</div>

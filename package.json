@@ -1,0 +1,46 @@
+{
+  "name": "@magnit-ce/collection-browser",
+  "version": "0.0.1",
+  "description": "A custom html element that provides a selection gallery as a dialog, to mimic an os-native file browser.",
+  "type": "module",
+  "main": "dist/collection-browser.js",
+  "module": "dist/collection-browser.mjs",
+  "types": "dist/collection-browser.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup collection-browser.ts --format cjs,esm --dts --clean",
+    "build-vanilla": "tsup collection-browser.ts --format esm --dts --clean --outDir ./vanilla",
+    "minify": "tsup collection-browser.ts --format esm --config ./tsup.config.min.ts --outDir ./vanilla --minify",
+    "lint": "tsup collection-browser.ts --format esm --tsconfig ./tsconfig.lint.json",
+    "package": "npm run build && npm run build-vanilla && npm run minify",
+    "release": "npm run package && changeset publish"
+  },
+  "keywords": [
+    "custom",
+    "element",
+    "html",
+    "browser",
+    "file",
+    "gallery",
+    "option",
+    "choose"
+  ],
+  "author": "catapart",
+  "license": "CC0-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/catapart/magnitce-collection-browser"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.7",
+    "minify": "^11.4.0",
+    "terser": "^5.31.3",
+    "tsup": "^8.2.0",
+    "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "@magnit-ce/selectable-items": "^0.0.6"
+  }
+}
