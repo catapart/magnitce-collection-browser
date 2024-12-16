@@ -3,31 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collection Browser Demo</title>
+    <title>&lt;collection-browser&gt; Demo</title>
     <link rel="stylesheet" href="./demo-page.css">
 </head>
 <body>
-    <main>
-        <h1>Overview</h1>
-        <div class="overview">
+    <main class="centered-single-column">
+        <header class="full-width">
+            <div class="content centered-single-column">
+                <h1>The <code>collection-browser</code> element</h1>
+            </div>
+        </header>
+        <article class="overview">
+            <h2>Overview</h2>
             <p>The <code>&lt;collection-browser&gt;</code> element is a container that manages a collection of children as a gallery of items for interaction.</p>
             <p>It provides selection events and an add button for invoking handlers to add new items to the collection.</p>
             <p>It also provides a <code>category</code> slot which can be used to filter the children, either with built-in handling, or by using custom event handlers.</p>
-        </div>
-        <h1>Examples</h1>
+        </article>
         <article class="basic">
-            <header>Basic Examples</header>
-            <div class="example">
-                <div class="embed">
-                    <style>
-                        article.basic .embed collection-browser
-                        {
-                            margin: 1em;
-                            width: 600px;
-                        }
-                    </style>
-                    <header>Embedded</header>
+            <h2>Basic Examples</h2>
+            <section class="embed">
+                <style>
+                    article.basic .embed collection-browser
+                    {
+                        margin: 1em;
+                        width: 600px;
+                    }
+                </style>
+                <h3>Embedded</h3>
+                <div class="description">
                     <p>The <code>&lt;collection-browser&gt;</code> element can be used directly on the page, as an isolated gallery.</p>
+                </div>
+                <div class="example">
                     <collection-browser>
                         <div slot="category">Category 1</div>
                         <div slot="category">Category 2</div>
@@ -40,40 +46,44 @@
                         <div>E</div>
                     </collection-browser>
                 </div>
-                <div class="dialog">
-                    <style>
-                        article.basic .dialog collection-browser
-                        {
-                            width: 400px;
-                        }
-                        article.basic .dialog dialog
-                        {
-                            top: 50%;
-                            flex-direction: column;
-                        }
-                        article.basic .dialog dialog[open]
-                        {
-                            display: flex;
-                        }
-                        article.basic .dialog dialog > header
-                        ,article.basic .dialog dialog > form > header
-                        {
-                            display: flex;
-                            align-items: center;
-                            padding-bottom: 7px;
-                        }
-                        article.basic .dialog dialog > footer
-                        ,article.basic .dialog dialog > form > footer
-                        {
-                            display: flex;
-                            align-items: center;
-                            justify-content: flex-end;
-                            padding-top: 7px;
-                        }
-                    </style>
-                    <header>Dialog</header>
+            </section>
+            <section class="dialog">
+                <style>
+                    article.basic .dialog collection-browser
+                    {
+                        width: 400px;
+                    }
+                    article.basic .dialog dialog
+                    {
+                        top: 50%;
+                        flex-direction: column;
+                    }
+                    article.basic .dialog dialog[open]
+                    {
+                        display: flex;
+                    }
+                    article.basic .dialog dialog > header
+                    ,article.basic .dialog dialog > form > header
+                    {
+                        display: flex;
+                        align-items: center;
+                        padding-bottom: 7px;
+                    }
+                    article.basic .dialog dialog > footer
+                    ,article.basic .dialog dialog > form > footer
+                    {
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-end;
+                        padding-top: 7px;
+                    }
+                </style>
+                <h3>Dialog</h3>
+                <div class="description">
                     <p>The <code>&lt;collection-browser&gt;</code> element can also be used within a <code>&lt;dialog&gt;</code> element to mimic a "File Browser".</p>
-                    <p>Use the button, below, to open the dialog example. Note that this example's <code>&lt;collection-browser&gt;</code> element has a <code>multi</code> attribute, so multiple items may be selected.</p>
+                    <p>Use the button, below, to open the dialog example. Note that this example's <code>&lt;collection-browser&gt;</code> element has a <code>multi</code> attribute, so multiple items may be selected.</p>    
+                </div>
+                <div class="example">
                     <dialog>
                         <form class="close-form" method="dialog">
                             <header>
@@ -100,16 +110,20 @@
                     </dialog>
                     <button type="button" id="basic_openDialog">Open Browser</button>
                 </div>
-                <div class="no-categories">
-                    <style>
-                        article.basic .no-categories collection-browser
-                        {
-                            margin: 1em;
-                            width: 600px;
-                        }
-                    </style>
-                    <header>No Categories</header>
+            </section>
+            <section class="no-categories">
+                <style>
+                    article.basic .no-categories collection-browser
+                    {
+                        margin: 1em;
+                        width: 600px;
+                    }
+                </style>
+                <h3>No Categories</h3>
+                <div class="description">
                     <p>The <code>&lt;collection-browser&gt;</code> element can be used without any categories, if items do not need to be filtered.</p>
+                </div>
+                <div class="example">
                     <collection-browser>
                         <div>A</div>
                         <div>B</div>
@@ -118,21 +132,25 @@
                         <div>E</div>
                     </collection-browser>
                 </div>
-                <div class="no-add">
-                    <style>
-                        article.basic .no-add collection-browser
-                        {
-                            margin: 1em;
-                            width: 600px;
-                        }
-                        article.basic .no-add collection-browser::part(header)
-                        {
-                            display: none;
-                        }
-                    </style>
-                    <header>No Add Button</header>
+            </section>
+            <section class="no-add">
+                <style>
+                    article.basic .no-add collection-browser
+                    {
+                        margin: 1em;
+                        width: 600px;
+                    }
+                    article.basic .no-add collection-browser::part(header)
+                    {
+                        display: none;
+                    }
+                </style>
+                <h3>No Add Button</h3>
+                <div class="description">
                     <p>The <code>&lt;collection-browser&gt;</code> element's "Add" button is in the <code>header</code> part, which can be removed by setting its <code>display</code> style property to <code>none</code>.</p>
                     <p>In this example, the entire <code>header</code> part has been hidden by setting its <code>display</code> value to <code>none</code>, rather than directly removing the "Add" button:</p>
+                </div>
+                <div class="example">
                     <collection-browser>
                         <div slot="category">Category 1</div>
                         <div slot="category">Category 2</div>
@@ -143,7 +161,7 @@
                         <div>E</div>
                     </collection-browser>
                 </div>
-            </div>
+            </section>
             <script type="module">
                 const basicExample = document.querySelector('article.basic');
                 // const basicBrowser = basicExample.querySelector('collection-browser');
@@ -167,14 +185,16 @@
             </script>
         </article>
         <article class="categories">
-            <header>Categories</header>
-            <p>The <code>&lt;collection-browser&gt;</code> element provides a slot with the name <code>category</code> as a method to navigate through, or filter the items in the collection browser.</p>
-            <p>Category elements, like the item elements, can be any element type. To make an element a category, set it's <code>slot</code> attribute to <code>category</code>.</p>
-            <p>Each category element will trigger a <code>category</code> event when it is clicked. It also has the default functionality of add <code>selected</code> to its own class list, as well as adding the class <code>has-category</code> to any item that matches the category's key.</p>
-            <p>Matching is done with an exact string match of the <code>data-category</code> attribute for each category element and each item element. For default matching, set a category element's <code>data-category</code> value to any value, then set an item's <code>data-category</code> value to that same value. When the category is clicked, the item will get a <code>has-category</code> class.</p>
-            <p>Items may use multiple category keys by separating them with a comma (<code>,</code>) character. For instance, an item with the attribute <code>data-category="a,b,c"</code> would match for any category that had a key of "a", "b", or "c".</p>
-            <p>Default functionality can be prevented by handling the <code>category</code> event and calling the <code>preventDefault()</code> function on the event object.</p>
-            <p>In this example, the <code>has-category</code> class adds a border so the filtered elements can be seen. To demonstrate multiple categories, the last three elements - J, K, and L - each use multiple categories so that they all match for category 4, but each match for another category, as well.</p>
+            <h2>Categories</h2>
+            <div class="description">
+                <p>The <code>&lt;collection-browser&gt;</code> element provides a slot with the name <code>category</code> as a method to navigate through, or filter the items in the collection browser.</p>
+                <p>Category elements, like the item elements, can be any element type. To make an element a category, set it's <code>slot</code> attribute to <code>category</code>.</p>
+                <p>Each category element will trigger a <code>category</code> event when it is clicked. It also has the default functionality of add <code>selected</code> to its own class list, as well as adding the class <code>has-category</code> to any item that matches the category's key.</p>
+                <p>Matching is done with an exact string match of the <code>data-category</code> attribute for each category element and each item element. For default matching, set a category element's <code>data-category</code> value to any value, then set an item's <code>data-category</code> value to that same value. When the category is clicked, the item will get a <code>has-category</code> class.</p>
+                <p>Items may use multiple category keys by separating them with a comma (<code>,</code>) character. For instance, an item with the attribute <code>data-category="a,b,c"</code> would match for any category that had a key of "a", "b", or "c".</p>
+                <p>Default functionality can be prevented by handling the <code>category</code> event and calling the <code>preventDefault()</code> function on the event object.</p>
+                <p>In this example, the <code>has-category</code> class adds a border so the filtered elements can be seen. To demonstrate multiple categories, the last three elements - J, K, and L - each use multiple categories so that they all match for category 4, but each match for another category, as well.</p>
+                </div>
             <div class="example">
                 <style>
                     article.categories collection-browser
@@ -206,106 +226,56 @@
                     <div data-category="3,4">L</div>
                 </collection-browser>
             </div>
-            <!-- <div class="log">
-                <header>
-                    <span class="title">Event Log</span>
-                </header>
-                <ul></ul>
-            </div> -->
-            <script type="module">
-                // const eventsExample = document.querySelector('article.events');
-                // const eventsBrowser = eventsExample.querySelector('collection-browser');
-                // const eventsLog = document.querySelector('article.events .log ul');
-                // document.addEventListener('DOMContentLoaded', () =>
-                // {
-                //     eventsBrowser.addEventListener('change', (event) =>
-                //     {
-                //         console.log(event);
-
-                //         const result = {
-                //             newSelection: event.detail.newSelection.textContent,
-                //             previousSelection: event.detail.previousSelection.map((item) =>
-                //             {
-                //                 return item.textContent;
-                //             }),
-                //             shift: event.detail.shift,
-                //             ctrl: event.detail.ctrl,
-                //             alt: event.detail.alt,
-                //         }
-                //         logEventResult(result);
-                //     });
-                    
-
-                //     eventsBrowser.addEventListener('category', (event) =>
-                //     {
-                //         console.log(event);
-
-                //         const result = {
-                //             newSelection: event.detail.newSelection.textContent,
-                //             previousSelection: event.detail.previousSelection.map((item) =>
-                //             {
-                //                 return item.textContent;
-                //             })
-                //         }
-                //         logEventResult(result);
-                //     })
-                // });        
-                // function logEventResult(result)
-                // {
-                //     const entry = document.createElement('li');
-                //     entry.textContent = JSON.stringify(result, null, 2);
-                //     entry.classList.add('entry');
-                //     eventsLog.append(entry);
-                // }        
-            </script>
         </article>
         <article class="custom">
-            <header>The <code>&lt;captioned-thumbnail&gt;</code> and <code>&lt;collection-filter&gt;</code> elements</header>
-            <div class="example">
-                <style>
-                    article.custom .captioned-thumbnail collection-browser
-                    {
-                        width: 600px;
-                    }
-                    article.custom dialog
-                    {
-                        position: fixed;
-                        top: 50%;
-                        translate: 0 -50%;
-                        flex-direction: column;
-                        /* margin: .5em minmax(.5em, auto) 0 minmax(.5em, auto);
-                        max-width: calc(100vw - 1em);
-                        max-height: calc(100vh - 1em); */
-                    }
-                    article.custom dialog[open]
-                    {
-                        display: flex;
-                    }
-                    article.custom dialog > header
-                    ,article.custom dialog > form > header
-                    {
-                        display: flex;
-                        align-items: center;
-                        padding-bottom: 7px;
-                    }
-                    article.custom dialog > footer
-                    ,article.custom dialog > form > footer
-                    {
-                        display: flex;
-                        align-items: center;
-                        justify-content: flex-end;
-                        padding-top: 7px;
-                    }
+            <h2>The <code>&lt;captioned-thumbnail&gt;</code> and <code>&lt;collection-filter&gt;</code> elements</h2>
+            <style>
+                article.custom .captioned-thumbnail collection-browser
+                {
+                    width: 600px;
+                }
+                article.custom dialog
+                {
+                    position: fixed;
+                    top: 50%;
+                    translate: 0 -50%;
+                    flex-direction: column;
+                    /* margin: .5em minmax(.5em, auto) 0 minmax(.5em, auto);
+                    max-width: calc(100vw - 1em);
+                    max-height: calc(100vh - 1em); */
+                }
+                article.custom dialog[open]
+                {
+                    display: flex;
+                }
+                article.custom dialog > header
+                ,article.custom dialog > form > header
+                {
+                    display: flex;
+                    align-items: center;
+                    padding-bottom: 7px;
+                }
+                article.custom dialog > footer
+                ,article.custom dialog > form > footer
+                {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    padding-top: 7px;
+                }
 
-                    article.custom .captioned-thumbnail  collection-browser captioned-thumbnail:not(.has-category)
-                    {
-                        display: none;
-                    }
-                </style>
-                <div class="captioned-thumbnail">
-                    <header>The <code>&lt;captioned-thumbnail&gt;</code> Element</header>
+                article.custom .captioned-thumbnail  collection-browser captioned-thumbnail:not(.has-category)
+                {
+                    display: none;
+                }
+            </style>
+            <section class="captioned-thumbnail">
+                <h3>The <code>&lt;captioned-thumbnail&gt;</code> Element</h3>
+                <div class="description">
                     <p>The <code>&lt;collection-browser&gt;</code> element can be used within a <code>&lt;dialog&gt;</code> element to mimic a "File Browser".</p>
                     <p>Use the button, below, to open the dialog example. Note that this example's <code>&lt;collection-browser&gt;</code> element has a <code>multi</code> attribute, so multiple items may be selected.</p>
+                </div>
+                <div class="example">
                     <dialog>
                         <form class="close-form" method="dialog">
                             <header>
@@ -321,7 +291,7 @@
                                 <div slot="category" data-category="drive-2">Drive 2</div>
                                 <div slot="category" data-category="drive-3">Drive 3</div>
                                 <div slot="category" data-category="drive-4">Drive 4</div>
-
+    
                                 <captioned-thumbnail edit select data-category="drive-1">First</captioned-thumbnail>
                                 <captioned-thumbnail edit select data-category="drive-1">Second</captioned-thumbnail>
                                 <captioned-thumbnail edit select data-category="drive-1">Third</captioned-thumbnail>
@@ -358,45 +328,49 @@
                     </dialog>
                     <button type="button" id="custom_openThumbnail">Open Browser</button>
                 </div>
-                <div class="collection-filter">
-                    <style>
-                        .collection-filter:has(.match) captioned-thumbnail:not(.match)
-                        {
-                            opacity: .5;
-                            order: 2;
-                        }
-                        .collection-filter captioned-thumbnail.match
-                        {
-                            border: solid 1px highlight;
-                            order: 1;
-                        }
+            </section>
+            <section class="collection-filter">
+                <style>
+                    .collection-filter:has(.match) captioned-thumbnail:not(.match)
+                    {
+                        opacity: .5;
+                        order: 2;
+                    }
+                    .collection-filter captioned-thumbnail.match
+                    {
+                        border: solid 1px highlight;
+                        order: 1;
+                    }
 
-                        .collection-filter .gallery > header
-                        {
-                            display: flex;
-                            gap: 1em;
-                            align-items: center;
-                            background-color: infobackground;
-                            color: infotext;
-                            padding: .5em .25em;
-                            border-top-left-radius: 3px;
-                            border-top-right-radius: 3px;
-                        }
-                        .collection-filter .gallery collection-filter
-                        {
-                            flex: 1;
-                        }
+                    .collection-filter .gallery > header
+                    {
+                        display: flex;
+                        gap: 1em;
+                        align-items: center;
+                        background-color: infobackground;
+                        color: infotext;
+                        padding: .5em .25em;
+                        border-top-left-radius: 3px;
+                        border-top-right-radius: 3px;
+                    }
+                    .collection-filter .gallery collection-filter
+                    {
+                        flex: 1;
+                    }
 
-                        article.custom .collection-filter collection-browser
-                        {
-                            height: 300px;
-                        }
-                    </style>
-                    <header>The <code>&lt;collection-filter&gt;</code> Element</header>
+                    article.custom .collection-filter collection-browser
+                    {
+                        height: 300px;
+                    }
+                </style>
+                <h3>The <code>&lt;collection-filter&gt;</code> Element</h3>
+                <div class="description">
                     <p>The <code>&lt;collection-browser&gt;</code> element's items can be searched by adding the custom <code>&lt;collection-filter&gt;</code> element.</p>
                     <p>The <code>&lt;collection-filter&gt;</code> element prepares a query and then provides that query as <code>detail</code> data on an event. Using that data, the items can be filtered to present the browser's items in their most relevant order.</p>
                     <p>In the example below, the items that match the provided search term will be given a border and moved to the front of the collection, while the other items will have their opacity lowered.</p>
                     <p>Try searching for "teen", for example:</p>
+                </div>
+                <div class="example">
                     <div class="gallery">
                         <header>
                             <span class="title">Custom Collection Browser</span>
@@ -431,7 +405,7 @@
                         </collection-browser>
                     </div>
                 </div>
-            </div>
+            </section>
             <script type="module">
                 const customExample = document.querySelector('article.custom');
 
@@ -521,12 +495,14 @@
             </script>
         </article>
         <article class="events">
-            <header>Events</header>
-            <p>The <code>&lt;collection-browser&gt;</code> element dispatches three event types: <code>change</code>, <code>category</code>, and <code>add</code></p>
-            <p>Whenever an item is selected, the <code>change</code> event is dispatched.</p>
-            <p>Whenever a category is selected, the <code>category</code> event is dispatched.</p>
-            <p>Whenever the add button is clicked, the <code>add</code> event is dispatched.</p>
-            <p>In the example below, each event is handled by adding an entry with the event's details in the entry log:</p>
+            <h2>Events</h2>
+            <div class="description">
+                <p>The <code>&lt;collection-browser&gt;</code> element dispatches three event types: <code>change</code>, <code>category</code>, and <code>add</code></p>
+                <p>Whenever an item is selected, the <code>change</code> event is dispatched.</p>
+                <p>Whenever a category is selected, the <code>category</code> event is dispatched.</p>
+                <p>Whenever the add button is clicked, the <code>add</code> event is dispatched.</p>
+                <p>In the example below, each event is handled by adding an entry with the event's details in the entry log:</p>    
+            </div>
             <div class="example">
                 <style>
                     article.events collection-browser
@@ -567,8 +543,6 @@
                 {
                     eventsBrowser.addEventListener('change', (event) =>
                     {
-                        console.log(event);
-
                         const result = {
                             newSelection: event.detail.newSelection.textContent,
                             previousSelection: event.detail.previousSelection.map((item) =>
@@ -585,8 +559,6 @@
 
                     eventsBrowser.addEventListener('category', (event) =>
                     {
-                        console.log(event);
-
                         const result = {
                             newSelection: event.detail.newSelection.textContent,
                             previousSelection: event.detail.previousSelection.map((item) =>
