@@ -1,27 +1,26 @@
-<nav part="navigation">
+<nav id="navigation">
     <slot name="navigation-header">
-        <header part="navigation-header">
+        <header id="navigation-header" class="header">
             <slot name="navigation-header-content"></slot>
         </header>
     </slot>
-    <selectable-items part="categories"><slot name="category"></slot></selectable-items>
+    <selectable-items id="categories"><slot name="category"></slot></selectable-items>
 </nav>
-<div part="gallery">
+<div id="gallery">
     <slot name="header">
-        <header part="header">
-            <slot name="header-content">
-            </slot>
+        <header id="gallery-header" class="header">
+            <slot name="header-content"></slot>
             <slot name="add-button">
-                <button part="add-button">
+                <button id="add-button" class="button">
                     <slot name="add-button-content">
-                        <span part="add-button-icon">+</span>
-                        <span part="add-button-label">Add Item</span>
+                        <span id="add-button-icon" class="icon">+</span>
+                        <span id="add-button-label">Add Item</span>
                     </slot>
                 </button>
             </slot>
         </header>
     </slot>
-    <div part="items">
+    <div id="items">
         <slot></slot>
     </div>
 </div>

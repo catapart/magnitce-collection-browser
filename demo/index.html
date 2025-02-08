@@ -407,6 +407,7 @@
                 </div>
             </section>
             <script type="module">
+                import { CaptionedThumbnailElement } from './captioned-thumbnail.js';
                 const customExample = document.querySelector('article.custom');
 
                 const customThumbnailDialog = customExample.querySelector('.captioned-thumbnail dialog');
@@ -429,43 +430,77 @@
                     let lastSelectedElements = [];
                     customThumbnailBrowser.addEventListener('change', (event) =>
                     {
-                        if(event.target == customThumbnailBrowser)
+                        if(event.target instanceof CaptionedThumbnailElement
+                        && (event.detail.method == "click" || event.detail.method == "input"))
                         {
-                            // prevent default; the captioned-thumbnail needs custom handling
-                            // for its selection state
-                            lastSelectedElements = event.detail.previousSelection;
+                            // an input event or a click event will trigger
+                            // changes that the collection browser already handles.
+                            // those events can be prevented on the thumbnail element.
                             event.preventDefault();
-                            return;
+
+                            // if checkbox was used for selection, allow multi-selection
+                            // without needing to use ctrl or shift. if it was a click,
+                            // require the key combinations
+                            if(event.detail.method == "input")
+                            {
+                                customThumbnailBrowser.dataset.multiSelect = true;
+                            }
+                            else
+                            {
+                                customThumbnailBrowser.removeAttribute('data-allow-multiple');
+                            }
                         }
 
-                        // if we're still going, this is a change event that
-                        // was fired by the captioned-thumbnail, and has bubbled
-                        // up to the collection-browser
-
-                        const { detail } = event;
-                        const { shiftKey, ctrlKey, method } = detail;
-
-                        // de-select other captioned thumbnail elements, if you don't
-                        // want to allow mutliple selection
-                        if(!shiftKey && !ctrlKey && method == 'click')
+                        // if this change event is from the
+                        // browser, manage the selections
+                        if(event.target == customThumbnailBrowser)
                         {
-                            lastSelectedElements.forEach(item => item.isSelected = false);
+                            event.preventDefault();
+                            
+                            const { detail } = event;
+                            const allowMultiple = customThumbnailBrowser.dataset.multiSelect;
+                            if(allowMultiple == null || allowMultiple == "false")
+                            {
+                                const { shift, ctrl } = detail;
+                                if(!shift && !ctrl)
+                                {
+                                    // de-select other captioned thumbnail elements 
+                                    // to prevent multiple selection
+                                    detail.previousSelection.forEach(item => item.isSelected = false);
+                                }
+                            }
+
+                            // set current selection
+                            detail.newSelection.isSelected = !detail.newSelection.isSelected;
+                            customThumbnailBrowser.removeAttribute('data-multi-select');
                         }
                     });
 
                     customFilterBrowser.addEventListener('change', (event) =>
                     {
-                        if(event.target != customFilterBrowser)
+                        if(event.target instanceof CaptionedThumbnailElement
+                        && (event.detail.method == "click" || event.detail.method == "input"))
                         {
-                            return;
+                            // an input event or a click event will trigger
+                            // changes that the collection browser already handles.
+                            // those events can be prevented on the thumbnail element.
+                            event.preventDefault();
+                        }
+                        
+
+                        // if this change event is from the
+                        // browser, manage the selections
+                        if(event.target == customFilterBrowser)
+                        {
+                            event.preventDefault();
+                            // de-select other captioned thumbnail elements 
+                            // to prevent multiple selection
+                            event.detail.previousSelection.forEach(item => item.isSelected = false);
+
+                            // set current selection
+                            event.detail.newSelection.isSelected = !event.detail.newSelection.isSelected;
                         }
 
-                        // prevent default; the captioned-thumbnail needs custom handling
-                        // for its selection state
-                        event.preventDefault();
-                        // de-select other captioned thumbnail elements 
-                        // to prevent mutliple selection
-                        event.detail.previousSelection.forEach(item => item.isSelected = false);
                     });
                     collectionFilter.addEventListener('change', (event) =>
                     {
@@ -569,7 +604,7 @@
                         logEventResult(result);
                     });
 
-                    eventsBrowser.findPart('add-button').addEventListener('click', (event) =>
+                    eventsBrowser.findElement('add-button').addEventListener('click', (event) =>
                     {
                         logEventResult(`[Add Button: onClick]`);
                     });
@@ -583,9 +618,142 @@
                 }        
             </script>
         </article>
+        <article class="nested-slots">
+            <h2>Nested Slots</h2>
+            <div class="description">
+                <p>The <code>&lt;collection-browser&gt;</code> element dispatches three event types: <code>change</code>, <code>category</code>, and <code>add</code></p>
+                <p>Whenever an item is selected, the <code>change</code> event is dispatched.</p>
+                <p>Whenever a category is selected, the <code>category</code> event is dispatched.</p>
+                <p>Whenever the add button is clicked, the <code>add</code> event is dispatched.</p>
+                <p>In the example below, each event is handled by adding an entry with the event's details in the entry log:</p>    
+            </div>
+            <div class="example">
+                <style>
+                    article.nested-slots collection-browser
+                    {
+                        margin: 1em;
+                        width: 600px;
+                    }
+                </style>
+                <shadow-wrapper-2 multi>
+                    <h5 slot="navigation-header">Drives</h5>
+                    
+                    <div slot="category" data-category="drive-1">Drive 1</div>
+                    <div slot="category" data-category="drive-2">Drive 2</div>
+                    <div slot="category" data-category="drive-3">Drive 3</div>
+                    <div slot="category" data-category="drive-4">Drive 4</div>
+
+                    <captioned-thumbnail edit select data-category="drive-1">First</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-1">Second</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-1">Third</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-1">Fourth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-1">Fifth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-1">Sixth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-2">Seventh</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-2">Eigth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-2">Ninth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-2">Tenth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-2">Eleventh</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-2">Twelfth</captioned-thumbnail>
+                    
+                    <captioned-thumbnail edit select data-category="drive-3">Thirteenth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-3">Fourteenth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-3">Fifteenth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-3">Sixteenth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-3">Seventeenth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-3">Eighteenth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-4">Ninteenth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-4">Twentieth</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-4">Twenty-First</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-4">Twenty-Second</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-4">Twenty-Third</captioned-thumbnail>
+                    <captioned-thumbnail edit select data-category="drive-4">Twenty-Fourth</captioned-thumbnail>
+                </shadow-wrapper-2>
+            </div>
+            <div class="log">
+                <header>
+                    <span class="title">Event Log</span>
+                </header>
+                <ul></ul>
+            </div>
+            <script type="module">
+                import './shadow-wrapper.js';
+                import './shadow-wrapper-2.js';
+                import { CaptionedThumbnailElement } from './captioned-thumbnail.js';
+                const nestedSlotsExample = document.querySelector('article.nested-slots');
+                const nestedSlotsWrapper = nestedSlotsExample.querySelector('shadow-wrapper-2');
+                const nestedSlotsBrowser = nestedSlotsWrapper.shadowRoot.querySelector('shadow-wrapper').shadowRoot.querySelector('collection-browser');
+                const nestedSlotsLog = document.querySelector('article.nested-slots .log ul');
+                document.addEventListener('DOMContentLoaded', () =>
+                {
+                    nestedSlotsBrowser.addEventListener('change', (event) =>
+                    {
+                        if(event.target instanceof CaptionedThumbnailElement
+                        && (event.detail.method == "click" || event.detail.method == "input"))
+                        {
+                            // an input event or a click event will trigger
+                            // changes that the collection browser already handles.
+                            // those events can be prevented on the thumbnail element.
+                            event.preventDefault();
+                        }
+                        
+
+                        // if this change event is from the
+                        // browser, manage the selections
+                        if(event.target == nestedSlotsBrowser)
+                        {
+                            event.preventDefault();
+                            // de-select other captioned thumbnail elements 
+                            // to prevent multiple selection
+                            event.detail.previousSelection.forEach(item => item.isSelected = false);
+
+                            // set current selection
+                            event.detail.newSelection.isSelected = !event.detail.newSelection.isSelected;
+                        
+                            const result = {
+                                newSelection: event.detail.newSelection?.textContent,
+                                previousSelection: event.detail.previousSelection?.map((item) =>
+                                {
+                                    return item.textContent;
+                                }),
+                                shift: event.detail.shift,
+                                ctrl: event.detail.ctrl,
+                                alt: event.detail.alt,
+                            }
+                            logEventResult(result);
+                        }
+                    });
+                    
+
+                    nestedSlotsBrowser.addEventListener('category', (event) =>
+                    {
+                        const result = {
+                            newSelection: event.detail.newSelection.textContent,
+                            previousSelection: event.detail.previousSelection.map((item) =>
+                            {
+                                return item.textContent;
+                            })
+                        }
+                        logEventResult(result);
+                    });
+
+                    nestedSlotsBrowser.findElement('add-button').addEventListener('click', (event) =>
+                    {
+                        logEventResult(`[Add Button: onClick]`);
+                    });
+                });        
+                function logEventResult(result)
+                {
+                    const entry = document.createElement('li');
+                    entry.textContent = JSON.stringify(result, null, 2);
+                    entry.classList.add('entry');
+                    nestedSlotsLog.append(entry);
+                }        
+            </script>
+        </article>
     </main>
     <script type="module" src="../vanilla/collection-browser.js"></script>
-    <script type="module" src="./captioned-thumbnail.min.js"></script>
+    <script type="module" src="./captioned-thumbnail.js"></script>
     <script type="module" src="./collection-filter.min.js"></script>
 </body>
 </html>

@@ -10,14 +10,15 @@ type CollectionBrowserProperties = {
 };
 declare class CollectionBrowserElement extends HTMLElement {
     #private;
-    componentParts: Map<string, HTMLElement>;
-    getPart<T extends HTMLElement = HTMLElement>(key: string): T;
-    findPart<T extends HTMLElement = HTMLElement>(key: string): T;
-    get selected(): HTMLElement[];
-    get allowMultiSelect(): boolean;
-    handledItems: WeakSet<Element>;
-    constructor();
     static selectedClassName: string;
+    componentParts: Map<string, HTMLElement>;
+    getElement<T extends HTMLElement = HTMLElement>(id: string): T;
+    findElement<T extends HTMLElement = HTMLElement>(id: string): T;
+    get allowMultiSelect(): boolean;
+    constructor();
+    getSelected<T extends HTMLElement = HTMLElement>(): T[];
+    selectItems<T extends HTMLElement = HTMLElement>(...items: T[]): void;
+    deselectItems<T extends HTMLElement = HTMLElement>(...items: T[]): void;
     clearSelection(): void;
 }
 

@@ -18,6 +18,8 @@ export type CollectionBrowserProperties =
     detailsLable?: string,
     cancelLabel?: string,
 }
+// const CAPTIONED_THUMBNAIL_TAG_NAME = "CAPTIONED-THUMBNAIL";
+// function elementIsThumbnail(target: HTMLElement) { return target.tagName == CAPTIONED_THUMBNAIL_TAG_NAME; }
 
 const COMPONENT_STYLESHEET = new CSSStyleSheet();
 COMPONENT_STYLESHEET.replaceSync(style);
@@ -25,40 +27,33 @@ COMPONENT_STYLESHEET.replaceSync(style);
 const COMPONENT_TAG_NAME = 'collection-browser';
 export class CollectionBrowserElement extends HTMLElement
 {
+    static selectedClassName: string = 'selected';
+
     componentParts: Map<string, HTMLElement> = new Map();
-    getPart<T extends HTMLElement = HTMLElement>(key: string)
+    getElement<T extends HTMLElement = HTMLElement>(id: string)
     {
-        if(this.componentParts.get(key) == null)
+        if(this.componentParts.get(id) == null)
         {
-            const part = this.shadowRoot!.querySelector(`[part="${key}"]`) as HTMLElement;
-            if(part != null) { this.componentParts.set(key, part); }
+            const part = this.findElement(id);
+            if(part != null) { this.componentParts.set(id, part); }
         }
 
-        return this.componentParts.get(key) as T;
+        return this.componentParts.get(id) as T;
     }
-    findPart<T extends HTMLElement = HTMLElement>(key: string) { return this.shadowRoot!.querySelector(`[part="${key}"]`) as T; }
+    findElement<T extends HTMLElement = HTMLElement>(id: string) { return this.shadowRoot!.getElementById(id) as T; }
 
-    get selected()
-    {
-        return this.#getSelected();
-    }
-    #getSelected = <T = HTMLElement>() => [
-        ...
-        ( this.shadowRoot!.querySelector('slot:not([name])') as HTMLSlotElement)
-        .assignedElements()
-        .reduce((selected, item, _index) => 
-        {
-            if(item.classList.contains('selected'))
-            {
-                selected.push(item);
-            }
-            return selected;
-        }, new Array<Element>())
-    ] as T[];
+    // get selected()
+    // {
+    //     return this.#getSelected();
+    // }
+    
 
     get allowMultiSelect() { return this.hasAttribute('multi') || this.hasAttribute('multiple'); }
 
-    handledItems: WeakSet<Element> = new WeakSet();
+    // handledItems: WeakSet<Element> = new WeakSet();
+
+    #defaultSlot!: HTMLSlotElement;
+    #boundSlotChange: (_event: Event) => void;
 
     constructor()
     {
@@ -67,6 +62,29 @@ export class CollectionBrowserElement extends HTMLElement
 
         this.shadowRoot!.innerHTML = html;
         this.shadowRoot!.adoptedStyleSheets.push(COMPONENT_STYLESHEET);
+
+        this.#boundSlotChange = ((_event: Event) =>
+        {
+            const children = this.#defaultSlot.assignedElements();
+            if(children.length == 1 && children[0] instanceof HTMLSlotElement)
+            {
+                let descendantSlot = children[0];
+                let descendantSlotChildren = descendantSlot.assignedElements()
+                while(descendantSlot instanceof HTMLSlotElement && descendantSlotChildren[0] instanceof HTMLSlotElement)
+                {
+                    descendantSlot = descendantSlotChildren[0];
+                    if(descendantSlot instanceof HTMLSlotElement)
+                    {
+                        descendantSlotChildren = descendantSlot.assignedElements();
+                    }
+                }
+                this.#registerSlot('default', descendantSlot);
+                return;
+            }
+            // this.#updateEntries(children);
+        }).bind(this);
+        this.#defaultSlot = this.shadowRoot!.querySelector('slot:not([name])') as HTMLSlotElement;
+        this.#defaultSlot.addEventListener('slotchange', this.#boundSlotChange);
 
         let previousCategorySelection: Array<HTMLElement> = [];
 
@@ -119,51 +137,144 @@ export class CollectionBrowserElement extends HTMLElement
             }
         });
 
-        this.shadowRoot!.querySelector('slot:not([name])')!.addEventListener('slotchange', (event) =>
+        // this.shadowRoot!.querySelector('slot:not([name])')!.addEventListener('slotchange', (event) =>
+        // {
+        //     const children = this.#defaultSlot.assignedElements();
+        //     for(let i = 0; i < children.length; i++)
+        //     {
+        //         if(this.handledItems.has(children[i]))
+        //         {
+        //             continue;
+        //         }
+        //         children[i].addEventListener('click', (event) =>
+        //         {
+                    
+        //         });
+        //     }
+        // });
+        // this.findElement('gallery').addEventListener('change', (event: Event|CustomEvent) =>
+        // {
+        //     const children = this.#defaultSlot.assignedElements();
+        //     const item = event.composedPath().find(item => item instanceof Element && children.indexOf(item) != -1);
+        //     console.log(item);
+        // });
+
+        this.findElement('gallery').addEventListener('click', (event: MouseEvent) =>
         {
-            const children = (event.target as HTMLSlotElement).assignedElements();
-            for(let i = 0; i < children.length; i++)
+            event.stopPropagation();
+
+            const children = this.#defaultSlot.assignedElements();
+
+            const target = event.composedPath().find(item => item instanceof Element && children.indexOf(item) != -1);
+            
+            if(target == null 
+            || !(target instanceof HTMLElement))
+            { return; }
+
+            const currentlySelected = children.reduce((selected, item, _index) => 
             {
-                if(this.handledItems.has(children[i]))
+                if(item.classList.contains(CollectionBrowserElement.selectedClassName) && item != target)
                 {
-                    continue;
+                    selected.push(item as HTMLElement);
                 }
-                children[i].addEventListener('click', (event) =>
+                return selected;
+            }, new Array<HTMLElement>());
+
+            const shift = (event as MouseEvent).getModifierState("Shift");
+            const ctrl = (event as MouseEvent).getModifierState("Control");
+            const alt = (event as MouseEvent).getModifierState("Alt");
+            
+            const changeEvent = new CustomEvent('change', { cancelable: true, detail: { newSelection: target, previousSelection: currentlySelected, shift, ctrl, alt } });
+            const value = this.dispatchEvent(changeEvent);
+
+            if(value == false) { return; }
+            
+            if(this.allowMultiSelect == false)
+            {
+                for(let i = 0; i < currentlySelected.length; i++)
                 {
-                    event.stopPropagation();
-
-                    const currentlySelected = children.reduce((selected, item, _index) => 
-                    {
-                        if(item.classList.contains(CollectionBrowserElement.selectedClassName) && item != children[i])
-                        {
-                            selected.push(item);
-                        }
-                        return selected;
-                    }, new Array<Element>());
-
-                    const shift = (event as MouseEvent).getModifierState("Shift");
-                    const ctrl = (event as MouseEvent).getModifierState("Control");
-                    const alt = (event as MouseEvent).getModifierState("Alt");
-                    
-                    const changeEvent = new CustomEvent('change', { cancelable: true, detail: { newSelection: children[i], previousSelection: currentlySelected, shift, ctrl, alt } });
-                    const value = this.dispatchEvent(changeEvent);
-
-                    if(value == false) { return; }
-                    
-                    if(this.allowMultiSelect == false)
-                    {
-                        for(let i = 0; i < currentlySelected.length; i++)
-                        {
-                            currentlySelected[i].classList.remove(CollectionBrowserElement.selectedClassName);
-                        }
-                    }
-                    children[i].classList.toggle(CollectionBrowserElement.selectedClassName);
-                });
+                    const selectedItem = currentlySelected[i];
+                    this.#deselectItem(selectedItem);
+                }
             }
-        });
+            this.#toggleSelection(target);
+        })
     }
+    #registerSlot(slotIdentifier: 'default', slot: HTMLSlotElement)
+    {
+        if(slotIdentifier == 'default')
+        {
+            if(this.#defaultSlot != null)
+            {
+                this.#defaultSlot.removeEventListener('slotchange', this.#boundSlotChange);
+            }
+            this.#defaultSlot = slot;
+            this.#defaultSlot.addEventListener('slotchange', this.#boundSlotChange);
+            const children = this.#defaultSlot.assignedElements();
+            this.toggleAttribute('empty', children.length == 0);
+            // this.#updateEntries(children);
+        }
+    }
+    
+    getSelected<T extends HTMLElement = HTMLElement>()
+    {
+        const selected = this.#defaultSlot.assignedElements()
+        .reduce((selected, item, _index) => 
+        {
+            if(item.hasAttribute('aria-selected'))
+            {
+                selected.push(item);
+            }
+            return selected;
+        }, new Array<Element>());
 
-    static selectedClassName: string = 'selected';
+        return selected as T[];
+    }
+    selectItems<T extends HTMLElement = HTMLElement>(...items: T[])
+    {
+        const children = this.#defaultSlot.assignedElements();
+        for(let i = 0; i < items.length; i++)
+        {
+            const item = items[i];
+            if(children.indexOf(item) == -1)
+            {
+                continue;
+            }
+            this.#selectItem(item);
+        }
+    }
+    #selectItem(item: HTMLElement)
+    {
+        item.setAttribute('aria-selected', 'option');
+        item.classList.add(CollectionBrowserElement.selectedClassName);
+    }
+    deselectItems<T extends HTMLElement = HTMLElement>(...items: T[])
+    {
+        const children = this.#defaultSlot.assignedElements();
+        for(let i = 0; i < items.length; i++)
+        {
+            const item = items[i];
+            if(children.indexOf(item) == -1)
+            {
+                continue;
+            }
+            this.#deselectItem(item);
+        }
+    }
+    #deselectItem(item: HTMLElement)
+    {
+        item.removeAttribute('aria-selected');
+        item.classList.remove(CollectionBrowserElement.selectedClassName);
+    }
+    #toggleSelection(item: HTMLElement)
+    {
+        if(item.hasAttribute('aria-selected')) {
+            this.#deselectItem(item);
+        }
+        else {
+            this.#selectItem(item);
+        }
+    }
 
     // static create(props?: CollectionBrowserProperties)
     // {
@@ -197,7 +308,7 @@ export class CollectionBrowserElement extends HTMLElement
     
     clearSelection()
     {
-        this.dispatchEvent(new CustomEvent('change', { detail: { newSelection: null, previousSelection: this.selected, shift: false, ctrl: false, alt: false } }));
+        this.dispatchEvent(new CustomEvent('change', { detail: { newSelection: null, previousSelection: this.getSelected(), shift: false, ctrl: false, alt: false } }));
     }
 
 }
