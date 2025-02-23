@@ -407,7 +407,7 @@
                 </div>
             </section>
             <script type="module">
-                import { CaptionedThumbnailElement } from './captioned-thumbnail.js';
+                import { CaptionedThumbnailElement } from './captioned-thumbnail.min.js';
                 const customExample = document.querySelector('article.custom');
 
                 const customThumbnailDialog = customExample.querySelector('.captioned-thumbnail dialog');
@@ -430,24 +430,29 @@
                     let lastSelectedElements = [];
                     customThumbnailBrowser.addEventListener('change', (event) =>
                     {
-                        if(event.target instanceof CaptionedThumbnailElement
-                        && (event.detail.method == "click" || event.detail.method == "input"))
+                        if(event.target instanceof CaptionedThumbnailElement)
                         {
-                            // an input event or a click event will trigger
-                            // changes that the collection browser already handles.
-                            // those events can be prevented on the thumbnail element.
+                            // prevent the thumbnail from managing
+                            // its own selection state
                             event.preventDefault();
 
-                            // if checkbox was used for selection, allow multi-selection
-                            // without needing to use ctrl or shift. if it was a click,
-                            // require the key combinations
-                            if(event.detail.method == "input")
+                            if(event.detail.method == "click" || event.detail.method == "input")
                             {
-                                customThumbnailBrowser.dataset.multiSelect = true;
+                                // if checkbox was used for selection, allow multi-selection
+                                // without needing to use ctrl or shift. if it was a click,
+                                // require the key combinations
+                                if(event.detail.method == "input")
+                                {
+                                    customThumbnailBrowser.dataset.multiSelect = true;
+                                }
+                                else
+                                {
+                                    customThumbnailBrowser.removeAttribute('data-allow-multiple');
+                                }
                             }
-                            else
+                            else if (event.detail.method == 'Space' || event.detail.method == "Enter")
                             {
-                                customThumbnailBrowser.removeAttribute('data-allow-multiple');
+                                // if non-click method was used to select item
                             }
                         }
 
@@ -455,23 +460,31 @@
                         // browser, manage the selections
                         if(event.target == customThumbnailBrowser)
                         {
+                            // prevent the default state management
                             event.preventDefault();
                             
                             const { detail } = event;
-                            const allowMultiple = customThumbnailBrowser.dataset.multiSelect;
-                            if(allowMultiple == null || allowMultiple == "false")
+                            const allowMultipleData = customThumbnailBrowser.dataset.multiSelect;
+                            let allowMultiple = (allowMultipleData == "true");
+                            if(allowMultiple == false)
                             {
                                 const { shift, ctrl } = detail;
-                                if(!shift && !ctrl)
+                                if(shift == true || ctrl == true)
                                 {
-                                    // de-select other captioned thumbnail elements 
-                                    // to prevent multiple selection
-                                    detail.previousSelection.forEach(item => item.isSelected = false);
+                                    allowMultiple = true;
                                 }
+                            }
+                            if(allowMultiple == false)
+                            {
+                                // de-select other captioned thumbnail elements 
+                                // to prevent multiple selection
+                                customThumbnailBrowser.deselectItems(...detail.previousSelection);
+                                // detail.previousSelection.forEach(item => item.isSelected = false);
                             }
 
                             // set current selection
-                            detail.newSelection.isSelected = !detail.newSelection.isSelected;
+                            customThumbnailBrowser.selectItems(detail.newSelection);
+                            // detail.newSelection.isSelected = !detail.newSelection.isSelected;
                             customThumbnailBrowser.removeAttribute('data-multi-select');
                         }
                     });
@@ -679,7 +692,7 @@
             <script type="module">
                 import './shadow-wrapper.js';
                 import './shadow-wrapper-2.js';
-                import { CaptionedThumbnailElement } from './captioned-thumbnail.js';
+                import { CaptionedThumbnailElement } from './captioned-thumbnail.min.js';
                 const nestedSlotsExample = document.querySelector('article.nested-slots');
                 const nestedSlotsWrapper = nestedSlotsExample.querySelector('shadow-wrapper-2');
                 const nestedSlotsBrowser = nestedSlotsWrapper.shadowRoot.querySelector('shadow-wrapper').shadowRoot.querySelector('collection-browser');
@@ -753,7 +766,7 @@
         </article>
     </main>
     <script type="module" src="../vanilla/collection-browser.js"></script>
-    <script type="module" src="./captioned-thumbnail.js"></script>
+    <script type="module" src="./captioned-thumbnail.min.js"></script>
     <script type="module" src="./collection-filter.min.js"></script>
 </body>
 </html>
