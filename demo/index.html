@@ -608,11 +608,7 @@
                     eventsBrowser.addEventListener('category', (event) =>
                     {
                         const result = {
-                            newSelection: event.detail.newSelection.textContent,
-                            previousSelection: event.detail.previousSelection.map((item) =>
-                            {
-                                return item.textContent;
-                            })
+                            selected: event.detail.selected.textContent
                         }
                         logEventResult(result);
                     });
@@ -741,11 +737,7 @@
                     nestedSlotsBrowser.addEventListener('category', (event) =>
                     {
                         const result = {
-                            newSelection: event.detail.newSelection.textContent,
-                            previousSelection: event.detail.previousSelection.map((item) =>
-                            {
-                                return item.textContent;
-                            })
+                            newSelection: event.detail.selected.textContent
                         }
                         logEventResult(result);
                     });

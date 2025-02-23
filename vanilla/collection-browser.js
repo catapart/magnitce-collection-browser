@@ -4,8 +4,8 @@ var collection_browser_default = ':host\r\n{\r\n    --border-color: rgb(205 205 
 // collection-browser.html?raw
 var collection_browser_default2 = '<nav id="navigation">\r\n    <slot name="navigation-header">\r\n        <header id="navigation-header" class="header">\r\n            <slot name="navigation-header-content"></slot>\r\n        </header>\r\n    </slot>\r\n    <selectable-items id="categories"><slot name="category"></slot></selectable-items>\r\n</nav>\r\n<div id="gallery">\r\n    <slot name="header">\r\n        <header id="gallery-header" class="header">\r\n            <slot name="header-content"></slot>\r\n            <slot name="add-button">\r\n                <button id="add-button" class="button">\r\n                    <slot name="add-button-content">\r\n                        <span id="add-button-icon" class="icon">+</span>\r\n                        <span id="add-button-label">Add Item</span>\r\n                    </slot>\r\n                </button>\r\n            </slot>\r\n        </header>\r\n    </slot>\r\n    <div id="items">\r\n        <slot></slot>\r\n    </div>\r\n</div>';
 
-// node_modules/.pnpm/@magnit-ce+selectable-items@0.0.6/node_modules/@magnit-ce/selectable-items/dist/selectable-items.js
-var selectable_items_default = ":host { user-select: none; }\n::slotted(*)\n{\n    user-select: none;\n    cursor: pointer;\n}\n::slotted(:hover)\n{\n    background-color: var(--background-color-hover, rgb(221, 221, 221));\n}\n::slotted(.selected)\n{\n    background-color: var(--background-color-selected, highlight);\n    color: var(--color-selected, highlighttext);\n}\n@media (prefers-color-scheme: dark) \n{\n    ::slotted(:hover)\n    {\n        --background-color-hover: rgb(197, 197, 197);\n    }\n}";
+// node_modules/.pnpm/@magnit-ce+selectable-items@0.1.2/node_modules/@magnit-ce/selectable-items/dist/selectable-items.js
+var selectable_items_default = ":host { user-select: none; }\n::slotted(*)\n{\n    user-select: none;\n    cursor: pointer;\n}\n::slotted(:hover)\n{\n    background-color: var(--background-color-hover, rgb(221, 221, 221));\n}\n::slotted([aria-selected])\n{\n    background-color: var(--background-color-selected, highlight);\n    color: var(--color-selected, highlighttext);\n}\n@media (prefers-color-scheme: dark) \n{\n    ::slotted(:hover)\n    {\n        --background-color-hover: rgb(197, 197, 197);\n    }\n}";
 var COMPONENT_STYLESHEET = new CSSStyleSheet();
 COMPONENT_STYLESHEET.replaceSync(selectable_items_default);
 document.addEventListener("keydown", (event) => {
@@ -19,6 +19,20 @@ document.addEventListener("keyup", (event) => {
     SelectableItemsElement._multipleModifierActive = SelectableItemsElement.multipleModifierActive;
   }
 });
+function getSelectableItem(event, reference) {
+  const pathItems = event.composedPath();
+  let selectableItem = void 0;
+  for (let i = 0; i < pathItems.length; i++) {
+    let pathItem = pathItems[i];
+    if (pathItem == reference) {
+      break;
+    }
+    if (pathItem instanceof HTMLElement && pathItem instanceof HTMLSlotElement == false) {
+      selectableItem = pathItem;
+    }
+  }
+  return selectableItem;
+}
 var COMPONENT_TAG_NAME = "selectable-items";
 var SelectableItemsElement = class _SelectableItemsElement extends HTMLElement {
   static observedAttributes = [];
@@ -29,29 +43,52 @@ var SelectableItemsElement = class _SelectableItemsElement extends HTMLElement {
   static multipleModifierActive = false;
   static selectKeys = ["Enter", "Space"];
   static selectedClassName = "selected";
-  selected = () => [...this.querySelectorAll(`.${_SelectableItemsElement.selectedClassName}`)];
-  handledItems = /* @__PURE__ */ new WeakSet();
+  selected = () => {
+    let slot = this.querySelector("slot");
+    let target = this;
+    while (slot != null) {
+      target = slot;
+      slot = slot.querySelector("slot");
+    }
+    const targetChildren = target instanceof HTMLSlotElement ? target.assignedElements() : [...target.children];
+    return targetChildren.filter((item) => item instanceof HTMLElement && item.hasAttribute("aria-selected"));
+  };
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.innerHTML = `<slot></slot>`;
     this.shadowRoot.adoptedStyleSheets.push(COMPONENT_STYLESHEET);
+    this.addEventListener("keydown", (event) => {
+      if (_SelectableItemsElement.selectKeys.indexOf(event.code) > -1) {
+        const selectedChild = getSelectableItem(event, this);
+        if (selectedChild == void 0) {
+          return;
+        }
+        const defaultAllowed = this.#dispatchChange(selectedChild);
+        if (defaultAllowed == false) {
+          return;
+        }
+        event.preventDefault();
+        this.selectItem(selectedChild);
+      }
+    });
+    this.addEventListener("click", (event) => {
+      const selectedChild = getSelectableItem(event, this);
+      if (selectedChild == null) {
+        return;
+      }
+      const defaultAllowed = this.#dispatchChange(selectedChild);
+      if (defaultAllowed == false) {
+        return;
+      }
+      this.selectItem(selectedChild);
+    });
     this.shadowRoot.querySelector("slot").addEventListener("slotchange", (event) => {
       const children = event.target.assignedElements();
       for (let i = 0; i < children.length; i++) {
-        if (this.handledItems.has(children[i]) || children[i].tagName.toLowerCase() == "slot") {
-          continue;
+        if (children[i].hasAttribute("tabIndex") == false) {
+          children[i].setAttribute("tabIndex", "0");
         }
-        children[i].setAttribute("tabIndex", "0");
-        children[i].addEventListener("keydown", (event2) => {
-          if (_SelectableItemsElement.selectKeys.indexOf(event2.code) > -1) {
-            this.selectItem(event2.currentTarget);
-          }
-        });
-        children[i].addEventListener("click", (event2) => {
-          this.selectItem(event2.currentTarget);
-        });
-        this.handledItems.add(children[i]);
       }
     });
   }
@@ -59,15 +96,41 @@ var SelectableItemsElement = class _SelectableItemsElement extends HTMLElement {
     const allowMultipleAttribute = this.getAttribute("multiple") ?? this.getAttribute("multi");
     if (_SelectableItemsElement._multipleModifierActive == false || allowMultipleAttribute == null) {
       const currentlySelected = [...(item.parentElement ?? this).children].reduce((selected, currentItem, _index) => {
-        if (this.handledItems.has(currentItem) && currentItem.classList.contains(_SelectableItemsElement.selectedClassName)) {
+        if (currentItem.hasAttribute("aria-selected")) {
           selected.push(currentItem);
         }
         return selected;
       }, new Array());
-      currentlySelected.forEach((currentItem) => currentItem.classList.remove(_SelectableItemsElement.selectedClassName));
+      currentlySelected.forEach((currentItem) => this.#deselectItem(currentItem));
     }
-    item.classList.add(_SelectableItemsElement.selectedClassName);
-    this.dispatchEvent(new Event("change"));
+    this.#selectItem(item);
+    return this.selected();
+  }
+  #selectItem(item) {
+    item.classList.add(this.getAttribute("selected-class-name") ?? _SelectableItemsElement.selectedClassName);
+    item.setAttribute("aria-selected", "option");
+  }
+  #deselectItem(item) {
+    item.classList.remove(this.getAttribute("selected-class-name") ?? _SelectableItemsElement.selectedClassName);
+    item.removeAttribute("aria-selected");
+  }
+  #dispatchChange(selectedItem) {
+    const selected = /* @__PURE__ */ new Set([selectedItem]);
+    const allowMultipleAttribute = this.hasAttribute("multiple") || this.hasAttribute("multi");
+    if (_SelectableItemsElement._multipleModifierActive == true && allowMultipleAttribute == true) {
+      const allSelected = this.selected();
+      console.log(allSelected);
+      for (const element of this.selected()) {
+        selected.add(element);
+      }
+    }
+    const defaultAllowed = this.dispatchEvent(new CustomEvent("change", {
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+      detail: { selected: Array.from(selected) }
+    }));
+    return defaultAllowed;
   }
 };
 if (customElements.get(COMPONENT_TAG_NAME) == null) {
@@ -128,23 +191,18 @@ var CollectionBrowserElement = class _CollectionBrowserElement extends HTMLEleme
     }).bind(this);
     this.#defaultSlot = this.shadowRoot.querySelector("slot:not([name])");
     this.#defaultSlot.addEventListener("slotchange", this.#boundSlotChange);
-    let previousCategorySelection = [];
     this.shadowRoot.querySelector("selectable-items").addEventListener("change", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      const categories = [...this.querySelectorAll('[slot="category"]')];
-      const selected = categories.find((item) => item.classList.contains("selected"));
-      const changeEvent = new CustomEvent("category", { cancelable: true, detail: { previousSelection: previousCategorySelection, newSelection: selected } });
-      const value = this.dispatchEvent(changeEvent);
-      if (selected == null) {
-        previousCategorySelection = [];
-      } else {
-        previousCategorySelection = [selected];
-      }
-      if (value == false || selected == null) {
+      const { selected } = event.detail;
+      const selectedCategoryItem = selected[0];
+      const changeEvent = new CustomEvent("category", { cancelable: true, detail: { selected: selectedCategoryItem } });
+      const allowDefault = this.dispatchEvent(changeEvent);
+      if (allowDefault == false || selectedCategoryItem == null) {
         return;
       }
-      const category = selected.dataset.category;
+      event.target.selectItem(selectedCategoryItem);
+      const category = selectedCategoryItem.dataset.category;
       if (category == null || category.trim() == "") {
         return;
       }
@@ -177,12 +235,7 @@ var CollectionBrowserElement = class _CollectionBrowserElement extends HTMLEleme
       if (target == null || !(target instanceof HTMLElement)) {
         return;
       }
-      const currentlySelected = children.reduce((selected, item, _index) => {
-        if (item.classList.contains(_CollectionBrowserElement.selectedClassName) && item != target) {
-          selected.push(item);
-        }
-        return selected;
-      }, new Array());
+      const currentlySelected = this.getSelected();
       const shift = event.getModifierState("Shift");
       const ctrl = event.getModifierState("Control");
       const alt = event.getModifierState("Alt");

@@ -86,24 +86,20 @@ export class CollectionBrowserElement extends HTMLElement
         this.#defaultSlot = this.shadowRoot!.querySelector('slot:not([name])') as HTMLSlotElement;
         this.#defaultSlot.addEventListener('slotchange', this.#boundSlotChange);
 
-        let previousCategorySelection: Array<HTMLElement> = [];
-
         this.shadowRoot!.querySelector('selectable-items')!.addEventListener('change', (event) =>
         {
             event.preventDefault();
             event.stopPropagation();
 
-            const categories = [...this.querySelectorAll('[slot="category"]')] as HTMLElement[];
-            const selected = categories.find(item => item.classList.contains('selected'));
+            const { selected } = (event as CustomEvent).detail;
+            const selectedCategoryItem = selected[0];
+            const changeEvent = new CustomEvent('category', { cancelable: true, detail: { selected: selectedCategoryItem } });
+            const allowDefault = this.dispatchEvent(changeEvent);
 
-            const changeEvent = new CustomEvent('category', { cancelable: true, detail: { previousSelection: previousCategorySelection, newSelection: selected } });
-            const value = this.dispatchEvent(changeEvent);
-            if(selected == null) { previousCategorySelection = []; }
-            else { previousCategorySelection = [selected]; }
-
-            if(value == false || selected == null) { return; }
+            if(allowDefault == false || selectedCategoryItem == null) { return; }
+            (event.target as any).selectItem(selectedCategoryItem);
             
-            const category = selected.dataset.category;
+            const category = selectedCategoryItem.dataset.category;
             if(category == null || category.trim() == "") { return; }
 
             this.dataset.category = category;
@@ -137,28 +133,6 @@ export class CollectionBrowserElement extends HTMLElement
             }
         });
 
-        // this.shadowRoot!.querySelector('slot:not([name])')!.addEventListener('slotchange', (event) =>
-        // {
-        //     const children = this.#defaultSlot.assignedElements();
-        //     for(let i = 0; i < children.length; i++)
-        //     {
-        //         if(this.handledItems.has(children[i]))
-        //         {
-        //             continue;
-        //         }
-        //         children[i].addEventListener('click', (event) =>
-        //         {
-                    
-        //         });
-        //     }
-        // });
-        // this.findElement('gallery').addEventListener('change', (event: Event|CustomEvent) =>
-        // {
-        //     const children = this.#defaultSlot.assignedElements();
-        //     const item = event.composedPath().find(item => item instanceof Element && children.indexOf(item) != -1);
-        //     console.log(item);
-        // });
-
         this.findElement('gallery').addEventListener('click', (event: MouseEvent) =>
         {
             event.stopPropagation();
@@ -171,15 +145,7 @@ export class CollectionBrowserElement extends HTMLElement
             || !(target instanceof HTMLElement))
             { return; }
 
-            const currentlySelected = children.reduce((selected, item, _index) => 
-            {
-                if(item.classList.contains(CollectionBrowserElement.selectedClassName) && item != target)
-                {
-                    selected.push(item as HTMLElement);
-                }
-                return selected;
-            }, new Array<HTMLElement>());
-
+            const currentlySelected = this.getSelected();
             const shift = (event as MouseEvent).getModifierState("Shift");
             const ctrl = (event as MouseEvent).getModifierState("Control");
             const alt = (event as MouseEvent).getModifierState("Alt");

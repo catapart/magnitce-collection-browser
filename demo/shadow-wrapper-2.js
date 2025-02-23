@@ -8,6 +8,7 @@ export class ShadowWrapperElement extends HTMLElement
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.innerHTML = `<shadow-wrapper part="shadow-wrapper" exportpart="collection-browser">
                                         <slot></slot>
+                                        <slot name="category" slot="category"></slot>
                                     </shadow-wrapper`;
     }
 }

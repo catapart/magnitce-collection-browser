@@ -8,6 +8,7 @@ export class ShadowWrapperElement extends HTMLElement
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.innerHTML = `<collection-browser part="collection-browser" placeholder="Collection is empty">
                             <slot></slot>
+                            <slot name="category" slot="category"></slot>
                         </collection-browser>`;
     }
 }
