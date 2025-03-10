@@ -4,7 +4,7 @@ var collection_browser_default = ':host\r\n{\r\n    --border-color: rgb(205 205 
 // collection-browser.html?raw
 var collection_browser_default2 = '<nav id="navigation">\r\n    <slot name="navigation-header">\r\n        <header id="navigation-header" class="header">\r\n            <slot name="navigation-header-content"></slot>\r\n        </header>\r\n    </slot>\r\n    <selectable-items id="categories"><slot name="category"></slot></selectable-items>\r\n</nav>\r\n<div id="gallery">\r\n    <slot name="header">\r\n        <header id="gallery-header" class="header">\r\n            <slot name="header-content"></slot>\r\n            <slot name="add-button">\r\n                <button id="add-button" class="button">\r\n                    <slot name="add-button-content">\r\n                        <span id="add-button-icon" class="icon">+</span>\r\n                        <span id="add-button-label">Add Item</span>\r\n                    </slot>\r\n                </button>\r\n            </slot>\r\n        </header>\r\n    </slot>\r\n    <div id="items">\r\n        <slot></slot>\r\n    </div>\r\n</div>';
 
-// node_modules/.pnpm/@magnit-ce+selectable-items@0.1.2/node_modules/@magnit-ce/selectable-items/dist/selectable-items.js
+// node_modules/.pnpm/@magnit-ce+selectable-items@0.1.3/node_modules/@magnit-ce/selectable-items/dist/selectable-items.js
 var selectable_items_default = ":host { user-select: none; }\n::slotted(*)\n{\n    user-select: none;\n    cursor: pointer;\n}\n::slotted(:hover)\n{\n    background-color: var(--background-color-hover, rgb(221, 221, 221));\n}\n::slotted([aria-selected])\n{\n    background-color: var(--background-color-selected, highlight);\n    color: var(--color-selected, highlighttext);\n}\n@media (prefers-color-scheme: dark) \n{\n    ::slotted(:hover)\n    {\n        --background-color-hover: rgb(197, 197, 197);\n    }\n}";
 var COMPONENT_STYLESHEET = new CSSStyleSheet();
 COMPONENT_STYLESHEET.replaceSync(selectable_items_default);
@@ -118,8 +118,6 @@ var SelectableItemsElement = class _SelectableItemsElement extends HTMLElement {
     const selected = /* @__PURE__ */ new Set([selectedItem]);
     const allowMultipleAttribute = this.hasAttribute("multiple") || this.hasAttribute("multi");
     if (_SelectableItemsElement._multipleModifierActive == true && allowMultipleAttribute == true) {
-      const allSelected = this.selected();
-      console.log(allSelected);
       for (const element of this.selected()) {
         selected.add(element);
       }

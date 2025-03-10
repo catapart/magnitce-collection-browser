@@ -41,6 +41,6 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
-    "@magnit-ce/selectable-items": "^0.1.2"
+    "@magnit-ce/selectable-items": "^0.1.3"
   }
 }
