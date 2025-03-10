@@ -1,5 +1,12 @@
 # @magnit-ce/collection-browser
 
+## 0.0.4
+
+### Patch Changes
+
+- bc02321: fixed lock file config
+- 847b7d3: updated selectable-items dependency
+
 ## 0.0.3
 
 ### Patch Changes
