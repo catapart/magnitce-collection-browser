@@ -6,7 +6,7 @@ export class ShadowWrapperElement extends HTMLElement
     {
         super();
         this.attachShadow({ mode: 'open' });
-        this.shadowRoot.innerHTML = `<shadow-wrapper part="shadow-wrapper" exportpart="collection-browser">
+        this.shadowRoot.innerHTML = `<shadow-wrapper part="shadow-wrapper" exportparts="collection-browser,header">
                                         <slot></slot>
                                         <slot name="category" slot="category"></slot>
                                     </shadow-wrapper`;

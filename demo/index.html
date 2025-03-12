@@ -558,6 +558,10 @@
                         margin: 1em;
                         width: 600px;
                     }
+                    article.events collection-browser::part(header)
+                    {
+                        display: none;
+                    }
                 </style>
                 <collection-browser multi>
                     <div slot="category">Category 1</div>
@@ -643,8 +647,12 @@
                         margin: 1em;
                         width: 600px;
                     }
+                    article.nested-slots shadow-wrapper-2::part(header)
+                    {
+                        display: none;
+                    }
                 </style>
-                <shadow-wrapper-2 multi>
+                <shadow-wrapper-2>
                     <h5 slot="navigation-header">Drives</h5>
                     
                     <div slot="category" data-category="drive-1">Drive 1</div>
@@ -697,40 +705,40 @@
                 {
                     nestedSlotsBrowser.addEventListener('change', (event) =>
                     {
-                        if(event.target instanceof CaptionedThumbnailElement
-                        && (event.detail.method == "click" || event.detail.method == "input"))
-                        {
-                            // an input event or a click event will trigger
-                            // changes that the collection browser already handles.
-                            // those events can be prevented on the thumbnail element.
-                            event.preventDefault();
-                        }
+                        // if(event.target instanceof CaptionedThumbnailElement
+                        // && (event.detail.method == "click" || event.detail.method == "input"))
+                        // {
+                        //     // an input event or a click event will trigger
+                        //     // changes that the collection browser already handles.
+                        //     // those events can be prevented on the thumbnail element.
+                        //     event.preventDefault();
+                        // }
                         
 
-                        // if this change event is from the
-                        // browser, manage the selections
-                        if(event.target == nestedSlotsBrowser)
-                        {
-                            event.preventDefault();
-                            // de-select other captioned thumbnail elements 
-                            // to prevent multiple selection
-                            event.detail.previousSelection.forEach(item => item.isSelected = false);
+                        // // if this change event is from the
+                        // // browser, manage the selections
+                        // if(event.target == nestedSlotsBrowser)
+                        // {
+                        //     event.preventDefault();
+                        //     // de-select other captioned thumbnail elements 
+                        //     // to prevent multiple selection
+                        //     event.detail.previousSelection.forEach(item => item.isSelected = false);
 
-                            // set current selection
-                            event.detail.newSelection.isSelected = !event.detail.newSelection.isSelected;
+                        //     // set current selection
+                        //     event.detail.newSelection.isSelected = !event.detail.newSelection.isSelected;
                         
-                            const result = {
-                                newSelection: event.detail.newSelection?.textContent,
-                                previousSelection: event.detail.previousSelection?.map((item) =>
-                                {
-                                    return item.textContent;
-                                }),
-                                shift: event.detail.shift,
-                                ctrl: event.detail.ctrl,
-                                alt: event.detail.alt,
-                            }
-                            logEventResult(result);
-                        }
+                        //     const result = {
+                        //         newSelection: event.detail.newSelection?.textContent,
+                        //         previousSelection: event.detail.previousSelection?.map((item) =>
+                        //         {
+                        //             return item.textContent;
+                        //         }),
+                        //         shift: event.detail.shift,
+                        //         ctrl: event.detail.ctrl,
+                        //         alt: event.detail.alt,
+                        //     }
+                        //     logEventResult(result);
+                        // }
                     });
                     
 

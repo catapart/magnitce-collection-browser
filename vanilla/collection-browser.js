@@ -1,11 +1,11 @@
 // collection-browser.css?raw
-var collection_browser_default = ':host\r\n{\r\n    --border-color: rgb(205 205 205);\r\n\r\n    display: grid;\r\n    border: solid 1px var(--border-color);\r\n}\r\n@media (prefers-color-scheme: dark) \r\n{\r\n    :host\r\n    {\r\n        --border-color: rgb(81 81 81);\r\n    }\r\n}\r\n\r\n[part="navigation"]\r\n{\r\n    border-right: solid 1px var(--border-color);\r\n}\r\n[part="categories"] > ::slotted(*)\r\n{\r\n    padding: var(--category-padding, 5px 15px);\r\n}\r\n\r\n[part="gallery"]\r\n{\r\n    margin: 0;\r\n    display: grid;\r\n    grid-template-rows: auto 1fr;\r\n    /* gap: 1em; */\r\n    user-select: none;\r\n    overflow: auto;\r\n}\r\n\r\n[part="header"]\r\n{\r\n    display: grid;\r\n    grid-template-columns: 1fr auto;\r\n    align-items: center;\r\n\r\n    border-bottom: solid 1px var(--border-color);\r\n}\r\n\r\n[part="items"]\r\n{\r\n    padding: 0;\r\n    margin: 0;\r\n    list-style: none;\r\n\r\n    display: grid;\r\n    grid-template-columns: repeat(auto-fill, var(--item-width, minmax(0, 100px)));\r\n    /* grid-column-gap: var(--column-gap, 1em);\r\n    grid-row-gap: var(--row-gap, 1em); */\r\n}\r\n\r\n\r\n::slotted(:not([slot]))\r\n{\r\n    border: solid 1px transparent;\r\n    margin: 3px 7px;\r\n}\r\n\r\n::slotted(:not([slot]):focus)\r\n{\r\n    border-color: rgb(205 205 205);\r\n}\r\n::slotted(:not([slot]):hover)\r\n{\r\n    background-color: var(--background-color-hover, rgb(221, 221, 221));\r\n}\r\n::slotted(:not([slot]).selected)\r\n{\r\n    background-color: var(--background-color-selected, highlight);\r\n    color: var(--color-selected, highlighttext);\r\n}\r\n@media (prefers-color-scheme: dark) \r\n{\r\n    ::slotted(:not([slot]):hover)\r\n    {\r\n        --background-color-hover: rgb(197, 197, 197);\r\n    }\r\n}\r\n\r\n[part="add-button"]\r\n{\r\n    align-self: center;\r\n    justify-self: flex-end;\r\n    margin: .5em 1em;\r\n}\r\n\r\n\r\n@media (max-width: 800px) \r\n{\r\n    \r\n}\r\n@media (min-width: 800px) \r\n{\r\n    :host\r\n    {\r\n        display: grid;\r\n        grid-template-columns: auto 1fr;\r\n    }\r\n}';
+var collection_browser_default = ':host\n{\n    --border-color: rgb(205 205 205);\n\n    display: grid;\n    border: solid 1px var(--border-color);\n}\n@media (prefers-color-scheme: dark) \n{\n    :host\n    {\n        --border-color: rgb(81 81 81);\n    }\n}\n\n[part="navigation"]\n{\n    border-right: solid 1px var(--border-color);\n}\n[part="categories"] > ::slotted(*)\n{\n    padding: var(--category-padding, 5px 15px);\n}\n\n[part="gallery"]\n{\n    margin: 0;\n    display: grid;\n    grid-template-rows: auto 1fr;\n    /* gap: 1em; */\n    user-select: none;\n    overflow: auto;\n}\n\n[part="header"]\n{\n    display: grid;\n    grid-template-columns: 1fr auto;\n    align-items: center;\n\n    border-bottom: solid 1px var(--border-color);\n}\n\n[part="items"]\n{\n    padding: 0;\n    margin: 0;\n    list-style: none;\n\n    display: grid;\n    grid-template-columns: repeat(auto-fill, var(--item-width, minmax(0, 100px)));\n    /* grid-column-gap: var(--column-gap, 1em);\n    grid-row-gap: var(--row-gap, 1em); */\n}\n\n\n::slotted(:not([slot]))\n{\n    border: solid 1px transparent;\n    margin: 3px 7px;\n}\n\n::slotted(:not([slot]):focus)\n{\n    border-color: rgb(205 205 205);\n}\n::slotted(:not([slot]):hover)\n{\n    background-color: var(--background-color-hover, rgb(221, 221, 221));\n}\n::slotted(:not([slot]).selected)\n{\n    background-color: var(--background-color-selected, highlight);\n    color: var(--color-selected, highlighttext);\n}\n@media (prefers-color-scheme: dark) \n{\n    ::slotted(:not([slot]):hover)\n    {\n        --background-color-hover: rgb(197, 197, 197);\n    }\n}\n\n[part="add-button"]\n{\n    align-self: center;\n    justify-self: flex-end;\n    margin: .5em 1em;\n}\n\n\n@media (max-width: 800px) \n{\n    \n}\n@media (min-width: 800px) \n{\n    :host\n    {\n        display: grid;\n        grid-template-columns: auto 1fr;\n    }\n}';
 
 // collection-browser.html?raw
-var collection_browser_default2 = '<nav id="navigation">\r\n    <slot name="navigation-header">\r\n        <header id="navigation-header" class="header">\r\n            <slot name="navigation-header-content"></slot>\r\n        </header>\r\n    </slot>\r\n    <selectable-items id="categories"><slot name="category"></slot></selectable-items>\r\n</nav>\r\n<div id="gallery">\r\n    <slot name="header">\r\n        <header id="gallery-header" class="header">\r\n            <slot name="header-content"></slot>\r\n            <slot name="add-button">\r\n                <button id="add-button" class="button">\r\n                    <slot name="add-button-content">\r\n                        <span id="add-button-icon" class="icon">+</span>\r\n                        <span id="add-button-label">Add Item</span>\r\n                    </slot>\r\n                </button>\r\n            </slot>\r\n        </header>\r\n    </slot>\r\n    <div id="items">\r\n        <slot></slot>\r\n    </div>\r\n</div>';
+var collection_browser_default2 = '<nav id="navigation">\n    <slot name="navigation-header">\n        <header id="navigation-header" class="header">\n            <slot name="navigation-header-content"></slot>\n        </header>\n    </slot>\n    <selectable-items id="categories"><slot name="category"></slot></selectable-items>\n</nav>\n<div id="gallery">\n    <slot name="header">\n        <header id="gallery-header" class="header">\n            <slot name="header-content"></slot>\n            <slot name="add-button">\n                <button id="add-button" class="button">\n                    <slot name="add-button-content">\n                        <span id="add-button-icon" class="icon">+</span>\n                        <span id="add-button-label">Add Item</span>\n                    </slot>\n                </button>\n            </slot>\n        </header>\n    </slot>\n    <div id="items">\n        <slot></slot>\n    </div>\n</div>';
 
-// node_modules/.pnpm/@magnit-ce+selectable-items@0.1.3/node_modules/@magnit-ce/selectable-items/dist/selectable-items.js
-var selectable_items_default = ":host { user-select: none; }\n::slotted(*)\n{\n    user-select: none;\n    cursor: pointer;\n}\n::slotted(:hover)\n{\n    background-color: var(--background-color-hover, rgb(221, 221, 221));\n}\n::slotted([aria-selected])\n{\n    background-color: var(--background-color-selected, highlight);\n    color: var(--color-selected, highlighttext);\n}\n@media (prefers-color-scheme: dark) \n{\n    ::slotted(:hover)\n    {\n        --background-color-hover: rgb(197, 197, 197);\n    }\n}";
+// node_modules/.pnpm/@magnit-ce+selectable-items@0.0.7/node_modules/@magnit-ce/selectable-items/dist/selectable-items.js
+var selectable_items_default = ":host { user-select: none; }\n::slotted(*)\n{\n    user-select: none;\n    cursor: pointer;\n}\n::slotted(:hover)\n{\n    background-color: var(--background-color-hover, rgb(221, 221, 221));\n}\n::slotted(.selected)\n{\n    background-color: var(--background-color-selected, highlight);\n    color: var(--color-selected, highlighttext);\n}\n@media (prefers-color-scheme: dark) \n{\n    ::slotted(:hover)\n    {\n        --background-color-hover: rgb(197, 197, 197);\n    }\n}";
 var COMPONENT_STYLESHEET = new CSSStyleSheet();
 COMPONENT_STYLESHEET.replaceSync(selectable_items_default);
 document.addEventListener("keydown", (event) => {
@@ -19,20 +19,6 @@ document.addEventListener("keyup", (event) => {
     SelectableItemsElement._multipleModifierActive = SelectableItemsElement.multipleModifierActive;
   }
 });
-function getSelectableItem(event, reference) {
-  const pathItems = event.composedPath();
-  let selectableItem = void 0;
-  for (let i = 0; i < pathItems.length; i++) {
-    let pathItem = pathItems[i];
-    if (pathItem == reference) {
-      break;
-    }
-    if (pathItem instanceof HTMLElement && pathItem instanceof HTMLSlotElement == false) {
-      selectableItem = pathItem;
-    }
-  }
-  return selectableItem;
-}
 var COMPONENT_TAG_NAME = "selectable-items";
 var SelectableItemsElement = class _SelectableItemsElement extends HTMLElement {
   static observedAttributes = [];
@@ -43,52 +29,40 @@ var SelectableItemsElement = class _SelectableItemsElement extends HTMLElement {
   static multipleModifierActive = false;
   static selectKeys = ["Enter", "Space"];
   static selectedClassName = "selected";
-  selected = () => {
-    let slot = this.querySelector("slot");
-    let target = this;
-    while (slot != null) {
-      target = slot;
-      slot = slot.querySelector("slot");
-    }
-    const targetChildren = target instanceof HTMLSlotElement ? target.assignedElements() : [...target.children];
-    return targetChildren.filter((item) => item instanceof HTMLElement && item.hasAttribute("aria-selected"));
-  };
+  selected = () => [...this.querySelectorAll(`.${_SelectableItemsElement.selectedClassName}`)];
+  // handledItems: WeakSet<Element> = new WeakSet();
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.innerHTML = `<slot></slot>`;
     this.shadowRoot.adoptedStyleSheets.push(COMPONENT_STYLESHEET);
+    this.addEventListener("click", (event) => {
+      let item;
+      const composedPath = event.composedPath();
+      for (let i = 0; i < composedPath.length; i++) {
+        const element = composedPath[i];
+        if (element.parentElement == this) {
+          item = element.tagName == "SLOT" ? element.assignedElements().find((slotChild) => composedPath.indexOf(slotChild) > -1) : element;
+        }
+      }
+      if (item == null) {
+        return;
+      }
+      this.selectItem(item);
+    });
     this.addEventListener("keydown", (event) => {
       if (_SelectableItemsElement.selectKeys.indexOf(event.code) > -1) {
-        const selectedChild = getSelectableItem(event, this);
-        if (selectedChild == void 0) {
-          return;
-        }
-        const defaultAllowed = this.#dispatchChange(selectedChild);
-        if (defaultAllowed == false) {
-          return;
-        }
+        this.selectItem(event.target);
         event.preventDefault();
-        this.selectItem(selectedChild);
       }
-    });
-    this.addEventListener("click", (event) => {
-      const selectedChild = getSelectableItem(event, this);
-      if (selectedChild == null) {
-        return;
-      }
-      const defaultAllowed = this.#dispatchChange(selectedChild);
-      if (defaultAllowed == false) {
-        return;
-      }
-      this.selectItem(selectedChild);
     });
     this.shadowRoot.querySelector("slot").addEventListener("slotchange", (event) => {
       const children = event.target.assignedElements();
       for (let i = 0; i < children.length; i++) {
-        if (children[i].hasAttribute("tabIndex") == false) {
-          children[i].setAttribute("tabIndex", "0");
+        if (children[i].hasAttribute("tabIndex")) {
+          continue;
         }
+        children[i].setAttribute("tabIndex", "0");
       }
     });
   }
@@ -96,39 +70,15 @@ var SelectableItemsElement = class _SelectableItemsElement extends HTMLElement {
     const allowMultipleAttribute = this.getAttribute("multiple") ?? this.getAttribute("multi");
     if (_SelectableItemsElement._multipleModifierActive == false || allowMultipleAttribute == null) {
       const currentlySelected = [...(item.parentElement ?? this).children].reduce((selected, currentItem, _index) => {
-        if (currentItem.hasAttribute("aria-selected")) {
+        if (currentItem.classList.contains(_SelectableItemsElement.selectedClassName)) {
           selected.push(currentItem);
         }
         return selected;
       }, new Array());
-      currentlySelected.forEach((currentItem) => this.#deselectItem(currentItem));
+      currentlySelected.forEach((currentItem) => currentItem.classList.remove(_SelectableItemsElement.selectedClassName));
     }
-    this.#selectItem(item);
-    return this.selected();
-  }
-  #selectItem(item) {
-    item.classList.add(this.getAttribute("selected-class-name") ?? _SelectableItemsElement.selectedClassName);
-    item.setAttribute("aria-selected", "option");
-  }
-  #deselectItem(item) {
-    item.classList.remove(this.getAttribute("selected-class-name") ?? _SelectableItemsElement.selectedClassName);
-    item.removeAttribute("aria-selected");
-  }
-  #dispatchChange(selectedItem) {
-    const selected = /* @__PURE__ */ new Set([selectedItem]);
-    const allowMultipleAttribute = this.hasAttribute("multiple") || this.hasAttribute("multi");
-    if (_SelectableItemsElement._multipleModifierActive == true && allowMultipleAttribute == true) {
-      for (const element of this.selected()) {
-        selected.add(element);
-      }
-    }
-    const defaultAllowed = this.dispatchEvent(new CustomEvent("change", {
-      bubbles: true,
-      composed: true,
-      cancelable: true,
-      detail: { selected: Array.from(selected) }
-    }));
-    return defaultAllowed;
+    item.classList.add(_SelectableItemsElement.selectedClassName);
+    this.dispatchEvent(new Event("change"));
   }
 };
 if (customElements.get(COMPONENT_TAG_NAME) == null) {
@@ -172,6 +122,7 @@ var CollectionBrowserElement = class _CollectionBrowserElement extends HTMLEleme
     this.attachShadow({ mode: "open" });
     this.shadowRoot.innerHTML = collection_browser_default2;
     this.shadowRoot.adoptedStyleSheets.push(COMPONENT_STYLESHEET2);
+    this.#applyPartAttributes();
     this.#boundSlotChange = ((_event) => {
       const children = this.#defaultSlot.assignedElements();
       if (children.length == 1 && children[0] instanceof HTMLSlotElement) {
@@ -260,6 +211,16 @@ var CollectionBrowserElement = class _CollectionBrowserElement extends HTMLEleme
       this.#defaultSlot.addEventListener("slotchange", this.#boundSlotChange);
       const children = this.#defaultSlot.assignedElements();
       this.toggleAttribute("empty", children.length == 0);
+    }
+  }
+  #applyPartAttributes() {
+    const identifiedElements = [...this.shadowRoot.querySelectorAll("[id]")];
+    for (let i = 0; i < identifiedElements.length; i++) {
+      identifiedElements[i].part.add(identifiedElements[i].id);
+    }
+    const classedElements = [...this.shadowRoot.querySelectorAll("[class]")];
+    for (let i = 0; i < classedElements.length; i++) {
+      classedElements[i].part.add(...classedElements[i].classList);
     }
   }
   getSelected() {

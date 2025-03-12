@@ -62,6 +62,7 @@ export class CollectionBrowserElement extends HTMLElement
 
         this.shadowRoot!.innerHTML = html;
         this.shadowRoot!.adoptedStyleSheets.push(COMPONENT_STYLESHEET);
+        this.#applyPartAttributes();
 
         this.#boundSlotChange = ((_event: Event) =>
         {
@@ -179,6 +180,19 @@ export class CollectionBrowserElement extends HTMLElement
             const children = this.#defaultSlot.assignedElements();
             this.toggleAttribute('empty', children.length == 0);
             // this.#updateEntries(children);
+        }
+    }
+    #applyPartAttributes()
+    {
+        const identifiedElements = [...this.shadowRoot!.querySelectorAll('[id]')];
+        for(let i = 0; i < identifiedElements.length; i++)
+        {
+            identifiedElements[i].part.add(identifiedElements[i].id);
+        }
+        const classedElements = [...this.shadowRoot!.querySelectorAll('[class]')];
+        for(let i = 0; i < classedElements.length; i++)
+        {
+            classedElements[i].part.add(...classedElements[i].classList);
         }
     }
     
