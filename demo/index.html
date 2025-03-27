@@ -558,6 +558,10 @@
                         margin: 1em;
                         width: 600px;
                     }
+                    article.events collection-browser::part(header)
+                    {
+                        display: none;
+                    }
                 </style>
                 <collection-browser multi>
                     <div slot="category">Category 1</div>
@@ -643,8 +647,12 @@
                         margin: 1em;
                         width: 600px;
                     }
+                    article.nested-slots shadow-wrapper-2::part(header)
+                    {
+                        display: none;
+                    }
                 </style>
-                <shadow-wrapper-2 multi>
+                <shadow-wrapper-2>
                     <h5 slot="navigation-header">Drives</h5>
                     
                     <div slot="category" data-category="drive-1">Drive 1</div>
@@ -695,6 +703,7 @@
                 const nestedSlotsLog = document.querySelector('article.nested-slots .log ul');
                 document.addEventListener('DOMContentLoaded', () =>
                 {
+                    let lastInputMethod = 'unknown';
                     nestedSlotsBrowser.addEventListener('change', (event) =>
                     {
                         if(event.target instanceof CaptionedThumbnailElement
@@ -704,6 +713,7 @@
                             // changes that the collection browser already handles.
                             // those events can be prevented on the thumbnail element.
                             event.preventDefault();
+                            lastInputMethod = event.detail.method;
                         }
                         
 
@@ -712,9 +722,14 @@
                         if(event.target == nestedSlotsBrowser)
                         {
                             event.preventDefault();
-                            // de-select other captioned thumbnail elements 
-                            // to prevent multiple selection
-                            event.detail.previousSelection.forEach(item => item.isSelected = false);
+                            console.log(event.detail);
+
+                            if(lastInputMethod == 'click')
+                            {
+                                // de-select other captioned thumbnail elements 
+                                // to prevent multiple selection
+                                event.detail.previousSelection.forEach(item => item.isSelected = false);
+                            }
 
                             // set current selection
                             event.detail.newSelection.isSelected = !event.detail.newSelection.isSelected;

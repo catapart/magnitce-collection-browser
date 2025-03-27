@@ -10,17 +10,17 @@
     <slot name="header">
         <header id="gallery-header" class="header">
             <slot name="header-content"></slot>
-            <slot name="add-button">
-                <button id="add-button" class="button">
-                    <slot name="add-button-content">
-                        <span id="add-button-icon" class="icon">+</span>
-                        <span id="add-button-label">Add Item</span>
-                    </slot>
-                </button>
-            </slot>
         </header>
     </slot>
     <div id="items">
         <slot></slot>
+        <slot name="add-button">
+            <button id="add-button" class="button">
+                <slot name="add-button-content">
+                    <span id="add-button-icon" class="icon">+</span>
+                    <span id="add-button-label">Add Item</span>
+                </slot>
+            </button>
+        </slot>
     </div>
 </div>

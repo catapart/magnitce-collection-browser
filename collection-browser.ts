@@ -62,6 +62,7 @@ export class CollectionBrowserElement extends HTMLElement
 
         this.shadowRoot!.innerHTML = html;
         this.shadowRoot!.adoptedStyleSheets.push(COMPONENT_STYLESHEET);
+        this.#applyPartAttributes();
 
         this.#boundSlotChange = ((_event: Event) =>
         {
@@ -81,7 +82,6 @@ export class CollectionBrowserElement extends HTMLElement
                 this.#registerSlot('default', descendantSlot);
                 return;
             }
-            // this.#updateEntries(children);
         }).bind(this);
         this.#defaultSlot = this.shadowRoot!.querySelector('slot:not([name])') as HTMLSlotElement;
         this.#defaultSlot.addEventListener('slotchange', this.#boundSlotChange);
@@ -178,7 +178,19 @@ export class CollectionBrowserElement extends HTMLElement
             this.#defaultSlot.addEventListener('slotchange', this.#boundSlotChange);
             const children = this.#defaultSlot.assignedElements();
             this.toggleAttribute('empty', children.length == 0);
-            // this.#updateEntries(children);
+        }
+    }
+    #applyPartAttributes()
+    {
+        const identifiedElements = [...this.shadowRoot!.querySelectorAll('[id]')];
+        for(let i = 0; i < identifiedElements.length; i++)
+        {
+            identifiedElements[i].part.add(identifiedElements[i].id);
+        }
+        const classedElements = [...this.shadowRoot!.querySelectorAll('[class]')];
+        for(let i = 0; i < classedElements.length; i++)
+        {
+            classedElements[i].part.add(...classedElements[i].classList);
         }
     }
     
