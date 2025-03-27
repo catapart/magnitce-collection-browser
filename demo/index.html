@@ -703,42 +703,49 @@
                 const nestedSlotsLog = document.querySelector('article.nested-slots .log ul');
                 document.addEventListener('DOMContentLoaded', () =>
                 {
+                    let lastInputMethod = 'unknown';
                     nestedSlotsBrowser.addEventListener('change', (event) =>
                     {
-                        // if(event.target instanceof CaptionedThumbnailElement
-                        // && (event.detail.method == "click" || event.detail.method == "input"))
-                        // {
-                        //     // an input event or a click event will trigger
-                        //     // changes that the collection browser already handles.
-                        //     // those events can be prevented on the thumbnail element.
-                        //     event.preventDefault();
-                        // }
+                        if(event.target instanceof CaptionedThumbnailElement
+                        && (event.detail.method == "click" || event.detail.method == "input"))
+                        {
+                            // an input event or a click event will trigger
+                            // changes that the collection browser already handles.
+                            // those events can be prevented on the thumbnail element.
+                            event.preventDefault();
+                            lastInputMethod = event.detail.method;
+                        }
                         
 
-                        // // if this change event is from the
-                        // // browser, manage the selections
-                        // if(event.target == nestedSlotsBrowser)
-                        // {
-                        //     event.preventDefault();
-                        //     // de-select other captioned thumbnail elements 
-                        //     // to prevent multiple selection
-                        //     event.detail.previousSelection.forEach(item => item.isSelected = false);
+                        // if this change event is from the
+                        // browser, manage the selections
+                        if(event.target == nestedSlotsBrowser)
+                        {
+                            event.preventDefault();
+                            console.log(event.detail);
 
-                        //     // set current selection
-                        //     event.detail.newSelection.isSelected = !event.detail.newSelection.isSelected;
+                            if(lastInputMethod == 'click')
+                            {
+                                // de-select other captioned thumbnail elements 
+                                // to prevent multiple selection
+                                event.detail.previousSelection.forEach(item => item.isSelected = false);
+                            }
+
+                            // set current selection
+                            event.detail.newSelection.isSelected = !event.detail.newSelection.isSelected;
                         
-                        //     const result = {
-                        //         newSelection: event.detail.newSelection?.textContent,
-                        //         previousSelection: event.detail.previousSelection?.map((item) =>
-                        //         {
-                        //             return item.textContent;
-                        //         }),
-                        //         shift: event.detail.shift,
-                        //         ctrl: event.detail.ctrl,
-                        //         alt: event.detail.alt,
-                        //     }
-                        //     logEventResult(result);
-                        // }
+                            const result = {
+                                newSelection: event.detail.newSelection?.textContent,
+                                previousSelection: event.detail.previousSelection?.map((item) =>
+                                {
+                                    return item.textContent;
+                                }),
+                                shift: event.detail.shift,
+                                ctrl: event.detail.ctrl,
+                                alt: event.detail.alt,
+                            }
+                            logEventResult(result);
+                        }
                     });
                     
 

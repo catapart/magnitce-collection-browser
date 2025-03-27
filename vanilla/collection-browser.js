@@ -1,11 +1,11 @@
 // collection-browser.css?raw
-var collection_browser_default = ':host\n{\n    --border-color: rgb(205 205 205);\n\n    display: grid;\n    border: solid 1px var(--border-color);\n}\n@media (prefers-color-scheme: dark) \n{\n    :host\n    {\n        --border-color: rgb(81 81 81);\n    }\n}\n\n[part="navigation"]\n{\n    border-right: solid 1px var(--border-color);\n}\n[part="categories"] > ::slotted(*)\n{\n    padding: var(--category-padding, 5px 15px);\n}\n\n[part="gallery"]\n{\n    margin: 0;\n    display: grid;\n    grid-template-rows: auto 1fr;\n    /* gap: 1em; */\n    user-select: none;\n    overflow: auto;\n}\n\n[part="header"]\n{\n    display: grid;\n    grid-template-columns: 1fr auto;\n    align-items: center;\n\n    border-bottom: solid 1px var(--border-color);\n}\n\n[part="items"]\n{\n    padding: 0;\n    margin: 0;\n    list-style: none;\n\n    display: grid;\n    grid-template-columns: repeat(auto-fill, var(--item-width, minmax(0, 100px)));\n    /* grid-column-gap: var(--column-gap, 1em);\n    grid-row-gap: var(--row-gap, 1em); */\n}\n\n\n::slotted(:not([slot]))\n{\n    border: solid 1px transparent;\n    margin: 3px 7px;\n}\n\n::slotted(:not([slot]):focus)\n{\n    border-color: rgb(205 205 205);\n}\n::slotted(:not([slot]):hover)\n{\n    background-color: var(--background-color-hover, rgb(221, 221, 221));\n}\n::slotted(:not([slot]).selected)\n{\n    background-color: var(--background-color-selected, highlight);\n    color: var(--color-selected, highlighttext);\n}\n@media (prefers-color-scheme: dark) \n{\n    ::slotted(:not([slot]):hover)\n    {\n        --background-color-hover: rgb(197, 197, 197);\n    }\n}\n\n[part="add-button"]\n{\n    align-self: center;\n    justify-self: flex-end;\n    margin: .5em 1em;\n}\n\n\n@media (max-width: 800px) \n{\n    \n}\n@media (min-width: 800px) \n{\n    :host\n    {\n        display: grid;\n        grid-template-columns: auto 1fr;\n    }\n}';
+var collection_browser_default = ":host\n{\n    --border-color: rgb(205 205 205);\n\n    display: grid;\n    border: solid 1px var(--border-color);\n}\n@media (prefers-color-scheme: dark) \n{\n    :host\n    {\n        --border-color: rgb(81 81 81);\n    }\n}\n\n#navigation\n{\n    border-right: solid 1px var(--border-color);\n}\n#categories > ::slotted(*)\n{\n    padding: var(--category-padding, 5px 15px);\n}\n\n#gallery\n{\n    margin: 0;\n    display: grid;\n    grid-template-rows: auto 1fr;\n    /* gap: 1em; */\n    user-select: none;\n    overflow: auto;\n}\n\n#gallery-header\n{\n    display: grid;\n    grid-template-columns: 1fr auto;\n    align-items: center;\n\n    border-bottom: solid 1px var(--border-color);\n}\n\n#items\n{\n    padding: 0;\n    margin: 0;\n    list-style: none;\n\n    display: grid;\n    grid-template-columns: repeat(auto-fill, var(--item-width, minmax(0, 100px)));\n    /* grid-column-gap: var(--column-gap, 1em);\n    grid-row-gap: var(--row-gap, 1em); */\n}\n\n\n::slotted(:not([slot]))\n{\n    border: solid 1px transparent;\n    margin: 3px 7px;\n}\n\n::slotted(:not([slot]):focus)\n{\n    border-color: rgb(205 205 205);\n}\n::slotted(:not([slot]):hover)\n{\n    background-color: var(--background-color-hover, rgb(221, 221, 221));\n}\n::slotted(:not([slot]).selected)\n{\n    background-color: var(--background-color-selected, highlight);\n    color: var(--color-selected, highlighttext);\n}\n@media (prefers-color-scheme: dark) \n{\n    ::slotted(:not([slot]):hover)\n    {\n        --background-color-hover: rgb(197, 197, 197);\n    }\n}\n\n#add-button\n{\n    display: inline-flex;\n    gap: 7px;\n    align-items: center;\n    justify-content: center;\n    padding: 3px 7px;\n    margin: 3px 7px;\n    max-height: 80px;\n    max-width: 100px;\n}\n\n\n@media (max-width: 800px) \n{\n    \n}\n@media (min-width: 800px) \n{\n    :host\n    {\n        display: grid;\n        grid-template-columns: auto 1fr;\n    }\n}";
 
 // collection-browser.html?raw
-var collection_browser_default2 = '<nav id="navigation">\n    <slot name="navigation-header">\n        <header id="navigation-header" class="header">\n            <slot name="navigation-header-content"></slot>\n        </header>\n    </slot>\n    <selectable-items id="categories"><slot name="category"></slot></selectable-items>\n</nav>\n<div id="gallery">\n    <slot name="header">\n        <header id="gallery-header" class="header">\n            <slot name="header-content"></slot>\n            <slot name="add-button">\n                <button id="add-button" class="button">\n                    <slot name="add-button-content">\n                        <span id="add-button-icon" class="icon">+</span>\n                        <span id="add-button-label">Add Item</span>\n                    </slot>\n                </button>\n            </slot>\n        </header>\n    </slot>\n    <div id="items">\n        <slot></slot>\n    </div>\n</div>';
+var collection_browser_default2 = '<nav id="navigation">\n    <slot name="navigation-header">\n        <header id="navigation-header" class="header">\n            <slot name="navigation-header-content"></slot>\n        </header>\n    </slot>\n    <selectable-items id="categories"><slot name="category"></slot></selectable-items>\n</nav>\n<div id="gallery">\n    <slot name="header">\n        <header id="gallery-header" class="header">\n            <slot name="header-content"></slot>\n        </header>\n    </slot>\n    <div id="items">\n        <slot></slot>\n        <slot name="add-button">\n            <button id="add-button" class="button">\n                <slot name="add-button-content">\n                    <span id="add-button-icon" class="icon">+</span>\n                    <span id="add-button-label">Add Item</span>\n                </slot>\n            </button>\n        </slot>\n    </div>\n</div>';
 
-// node_modules/.pnpm/@magnit-ce+selectable-items@0.0.7/node_modules/@magnit-ce/selectable-items/dist/selectable-items.js
-var selectable_items_default = ":host { user-select: none; }\n::slotted(*)\n{\n    user-select: none;\n    cursor: pointer;\n}\n::slotted(:hover)\n{\n    background-color: var(--background-color-hover, rgb(221, 221, 221));\n}\n::slotted(.selected)\n{\n    background-color: var(--background-color-selected, highlight);\n    color: var(--color-selected, highlighttext);\n}\n@media (prefers-color-scheme: dark) \n{\n    ::slotted(:hover)\n    {\n        --background-color-hover: rgb(197, 197, 197);\n    }\n}";
+// node_modules/.pnpm/@magnit-ce+selectable-items@0.1.4/node_modules/@magnit-ce/selectable-items/dist/selectable-items.js
+var selectable_items_default = ":host { user-select: none; }\n::slotted(*)\n{\n    user-select: none;\n    cursor: pointer;\n}\n::slotted(:hover)\n{\n    background-color: var(--background-color-hover, rgb(221, 221, 221));\n}\n::slotted([aria-selected])\n{\n    background-color: var(--background-color-selected, highlight);\n    color: var(--color-selected, highlighttext);\n}\n@media (prefers-color-scheme: dark) \n{\n    ::slotted(:hover)\n    {\n        --background-color-hover: rgb(197, 197, 197);\n    }\n}";
 var COMPONENT_STYLESHEET = new CSSStyleSheet();
 COMPONENT_STYLESHEET.replaceSync(selectable_items_default);
 document.addEventListener("keydown", (event) => {
@@ -19,6 +19,20 @@ document.addEventListener("keyup", (event) => {
     SelectableItemsElement._multipleModifierActive = SelectableItemsElement.multipleModifierActive;
   }
 });
+function getSelectableItem(event, reference) {
+  const pathItems = event.composedPath();
+  let selectableItem = void 0;
+  for (let i = 0; i < pathItems.length; i++) {
+    let pathItem = pathItems[i];
+    if (pathItem == reference) {
+      break;
+    }
+    if (pathItem instanceof HTMLElement && pathItem instanceof HTMLSlotElement == false) {
+      selectableItem = pathItem;
+    }
+  }
+  return selectableItem;
+}
 var COMPONENT_TAG_NAME = "selectable-items";
 var SelectableItemsElement = class _SelectableItemsElement extends HTMLElement {
   static observedAttributes = [];
@@ -29,40 +43,52 @@ var SelectableItemsElement = class _SelectableItemsElement extends HTMLElement {
   static multipleModifierActive = false;
   static selectKeys = ["Enter", "Space"];
   static selectedClassName = "selected";
-  selected = () => [...this.querySelectorAll(`.${_SelectableItemsElement.selectedClassName}`)];
-  // handledItems: WeakSet<Element> = new WeakSet();
+  selected = () => {
+    let slot = this.querySelector("slot");
+    let target = this;
+    while (slot != null) {
+      target = slot;
+      slot = slot.querySelector("slot");
+    }
+    const targetChildren = target instanceof HTMLSlotElement ? target.assignedElements() : [...target.children];
+    return targetChildren.filter((item) => item instanceof HTMLElement && item.hasAttribute("aria-selected"));
+  };
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.innerHTML = `<slot></slot>`;
     this.shadowRoot.adoptedStyleSheets.push(COMPONENT_STYLESHEET);
-    this.addEventListener("click", (event) => {
-      let item;
-      const composedPath = event.composedPath();
-      for (let i = 0; i < composedPath.length; i++) {
-        const element = composedPath[i];
-        if (element.parentElement == this) {
-          item = element.tagName == "SLOT" ? element.assignedElements().find((slotChild) => composedPath.indexOf(slotChild) > -1) : element;
-        }
-      }
-      if (item == null) {
-        return;
-      }
-      this.selectItem(item);
-    });
     this.addEventListener("keydown", (event) => {
       if (_SelectableItemsElement.selectKeys.indexOf(event.code) > -1) {
-        this.selectItem(event.target);
+        const selectedChild = getSelectableItem(event, this);
+        if (selectedChild == void 0) {
+          return;
+        }
+        const defaultAllowed = this.#dispatchChange(selectedChild);
+        if (defaultAllowed == false) {
+          return;
+        }
         event.preventDefault();
+        this.selectItem(selectedChild);
       }
+    });
+    this.addEventListener("click", (event) => {
+      const selectedChild = getSelectableItem(event, this);
+      if (selectedChild == null) {
+        return;
+      }
+      const defaultAllowed = this.#dispatchChange(selectedChild);
+      if (defaultAllowed == false) {
+        return;
+      }
+      this.selectItem(selectedChild);
     });
     this.shadowRoot.querySelector("slot").addEventListener("slotchange", (event) => {
       const children = event.target.assignedElements();
       for (let i = 0; i < children.length; i++) {
-        if (children[i].hasAttribute("tabIndex")) {
-          continue;
+        if (children[i].hasAttribute("tabIndex") == false) {
+          children[i].setAttribute("tabIndex", "0");
         }
-        children[i].setAttribute("tabIndex", "0");
       }
     });
   }
@@ -70,15 +96,39 @@ var SelectableItemsElement = class _SelectableItemsElement extends HTMLElement {
     const allowMultipleAttribute = this.getAttribute("multiple") ?? this.getAttribute("multi");
     if (_SelectableItemsElement._multipleModifierActive == false || allowMultipleAttribute == null) {
       const currentlySelected = [...(item.parentElement ?? this).children].reduce((selected, currentItem, _index) => {
-        if (currentItem.classList.contains(_SelectableItemsElement.selectedClassName)) {
+        if (currentItem.hasAttribute("aria-selected")) {
           selected.push(currentItem);
         }
         return selected;
       }, new Array());
-      currentlySelected.forEach((currentItem) => currentItem.classList.remove(_SelectableItemsElement.selectedClassName));
+      currentlySelected.forEach((currentItem) => this.#deselectItem(currentItem));
     }
-    item.classList.add(_SelectableItemsElement.selectedClassName);
-    this.dispatchEvent(new Event("change"));
+    this.#selectItem(item);
+    return this.selected();
+  }
+  #selectItem(item) {
+    item.classList.add(this.getAttribute("selected-class-name") ?? _SelectableItemsElement.selectedClassName);
+    item.setAttribute("aria-selected", "option");
+  }
+  #deselectItem(item) {
+    item.classList.remove(this.getAttribute("selected-class-name") ?? _SelectableItemsElement.selectedClassName);
+    item.removeAttribute("aria-selected");
+  }
+  #dispatchChange(selectedItem) {
+    const selected = /* @__PURE__ */ new Set([selectedItem]);
+    const allowMultipleAttribute = this.hasAttribute("multiple") || this.hasAttribute("multi");
+    if (_SelectableItemsElement._multipleModifierActive == true && allowMultipleAttribute == true) {
+      for (const element of this.selected()) {
+        selected.add(element);
+      }
+    }
+    const defaultAllowed = this.dispatchEvent(new CustomEvent("change", {
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+      detail: { selected: Array.from(selected) }
+    }));
+    return defaultAllowed;
   }
 };
 if (customElements.get(COMPONENT_TAG_NAME) == null) {

@@ -82,7 +82,6 @@ export class CollectionBrowserElement extends HTMLElement
                 this.#registerSlot('default', descendantSlot);
                 return;
             }
-            // this.#updateEntries(children);
         }).bind(this);
         this.#defaultSlot = this.shadowRoot!.querySelector('slot:not([name])') as HTMLSlotElement;
         this.#defaultSlot.addEventListener('slotchange', this.#boundSlotChange);
@@ -179,7 +178,6 @@ export class CollectionBrowserElement extends HTMLElement
             this.#defaultSlot.addEventListener('slotchange', this.#boundSlotChange);
             const children = this.#defaultSlot.assignedElements();
             this.toggleAttribute('empty', children.length == 0);
-            // this.#updateEntries(children);
         }
     }
     #applyPartAttributes()
