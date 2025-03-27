@@ -1,6 +1,6 @@
 {
   "name": "@magnit-ce/collection-browser",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A custom html element that provides a selection gallery as a dialog, to mimic an os-native file browser.",
   "type": "module",
   "main": "dist/collection-browser.js",
