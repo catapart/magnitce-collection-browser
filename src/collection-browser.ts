@@ -4,10 +4,6 @@ import { default as html } from './collection-browser.html?raw';
 
 import '@magnit-ce/selectable-items';
 
-export enum CollectionBrowserParts 
-{
-
-}
 
 export type CollectionBrowserProperties = 
 {
